@@ -24,10 +24,18 @@
     
         <div class="nav-right">
         <a href="#">Create</a>
-        <div class="user-icon">
-            <img src="../css/Ellipse3.png" alt="User background" class="user-bg">
-            <img src="../css/person.png" alt="User icon" class="user-img">
-        </div>
+        <div class="user-menu-container">
+            <div class="user-icon" id="userIcon">
+              <img src="../css/Ellipse3.png" alt="User background" class="user-bg">
+              <img src="../css/person.png" alt="User icon" class="user-img">
+            </div>
+          
+            <div class="dropdown-menu" id="dropdownMenu">
+              <a href="#">My Bookings</a>
+              <a href="#">Help</a>
+              <a href="#" class="signout">Sign out</a>
+            </div>
+          </div>
         </div>
     </nav>
   
@@ -154,6 +162,43 @@
       </form>
     </div>
   </div>
+
+  <!-- Seats Layout Modal -->
+<div id="seatsLayoutModal" class="modal">
+    <div class="modal-content seats-layout">
+      <h2>Seats Layout</h2>
+      <p>Design how your seats are layouted</p>
+  
+      <!-- Seat grid -->
+      <div id="seatGrid" class="seat-grid"></div>
+  
+      <!-- Sliders for rows and columns -->
+      <div class="layout-sliders">
+        <div class="slider-item">
+          <label for="rowsSlider">Rows</label>
+          <div class="slider-container">
+            <input type="range" id="rowsSlider" min="1" max="10" value="4">
+            <span id="rowsValue">4</span>
+          </div>
+        </div>
+  
+        <div class="slider-item">
+          <label for="colsSlider">Columns</label>
+          <div class="slider-container">
+            <input type="range" id="colsSlider" min="1" max="10" value="4">
+            <span id="colsValue">4</span>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Buttons -->
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn back-btn">Back</button>
+        <button type="button" class="continue-btn">Continue</button>
+      </div>
+    </div>
+  </div>
+  
 
   <script src="../js/createPage.js"></script>
 

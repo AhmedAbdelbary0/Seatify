@@ -11,34 +11,15 @@ body {
   }
   
 
-/* Navbar */
+/* Navbar */  
+  
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #7C3AED;
     color: white;
-    padding: 15px 40px;
-    border-radius:  55px;
-    width: 40%;
-    max-width: 900px;
-    margin: 0 auto 60px auto; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    position: relative;
-    z-index: 10;
-  }
-  
-  
-
-  
-/* Navbar Layout */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #7C3AED;
-    color: white;
-    padding: 15px 50px;
+    padding: 15px 20px;
     border-radius: 55px;
     width: 40%;
     max-width: 900px;
@@ -105,6 +86,50 @@ body {
     width: 18px;
     height: 18px;
     z-index: 2;
+  }
+
+  /* ===== USER DROPDOWN MENU ===== */
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    right: -10px;
+    top: 60px;
+    background-color: white;
+    border-radius: 39px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 160px;
+    padding: 12px 0;
+    display: none;
+    flex-direction: column;
+    z-index: 50;
+  }
+  
+  .dropdown-menu.show {
+    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .dropdown-menu a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #1E293B;
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #F3F3F3;
+  }
+  
+  .dropdown-menu .signout {
+    color: #EF4444;
+    font-weight: 600;
   }
   
   
@@ -483,5 +508,53 @@ body {
   .continue-btn:hover {
     background-color: #6C2AE5;
   }
+
+  /* ===== SEATS LAYOUT MODAL ===== */
+
+.seats-layout {
+    width: 500px;
+    text-align: center;
+  }
+  
+  .seat-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    justify-content: center;
+    margin: 30px 0;
+  }
+  
+  .seat {
+    width: 40px;
+    height: 40px;
+    background-color: #E5E7EB;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .seat.selected {
+    background-color: #7C3AED;
+  }
+  
+  /* Layout sliders */
+  .layout-sliders {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 40px 0;
+  }
+  
+  .slider-item {
+    width: 45%;
+  }
+  
+  .slider-item label {
+    display: block;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #1E293B;
+  }
+  
   
   
