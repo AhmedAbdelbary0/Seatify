@@ -127,6 +127,35 @@
       </div>
     </div>
   </footer>
+
+  <!-- Create Event Modal -->
+<div id="createEventModal" class="modal">
+    <div class="modal-content">
+      <h2>Create Event</h2>
+      <p>Enter your event details</p>
   
+      <form class="create-event-form">
+        <label for="eventTitle">Title</label>
+        <input type="text" id="eventTitle" name="eventTitle" placeholder="Enter event title" />
+  
+        <label for="eventDate">Date & Time</label>
+        <input type="datetime-local" id="eventDate" name="eventDate" />
+  
+        <label for="seatLimit">Seats Limit per Person</label>
+        <div class="slider-container">
+          <input type="range" id="seatLimit" name="seatLimit" min="1" max="10" value="4" />
+          <span id="seatValue">4</span>
+        </div>
+  
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn">Cancel</button>
+          <button type="submit" class="continue-btn">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/createPage.js"></script>
+
 </body>
 </html>
