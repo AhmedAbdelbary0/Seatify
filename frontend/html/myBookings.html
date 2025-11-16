@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings | Seatify</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body class="no-gradient">
+  <!-- ===== NAVBAR (no gradient) ===== -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="logo">Seatify</div>
+      <div class="nav-links-left">
+        <a href="#">Features</a>
+        <a href="#">FAQ</a>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <a href="#">Create</a>
+      <div class="user-menu-container">
+        <div class="user-icon" id="userIcon">
+          <img src="../css/Ellipse3.png" alt="User background" class="user-bg" />
+          <img src="../css/person.png" alt="User icon" class="user-img" />
+        </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="myBookings.html">My Bookings</a>
+          <a href="#">Help</a>
+          <a href="#" class="signout">Sign out</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== BOOKINGS SECTION ===== -->
+  <section class="bookings-section">
+    <h1 class="bookings-title">Your Bookings</h1>
+
+    <div class="filters">
+      <img src="../css/Filter.png" alt="Filter icon" class="filter-icon" />
+      <span class="filter-label">Filters</span>
+      <button class="filter-btn active">Active</button>
+      <button class="filter-btn">Canceled</button>
+    </div>
+
+    <div class="booking-list">
+      <div class="booking-item">
+        <span><strong>Title</strong> Group Gather</span>
+        <span><strong>Seats</strong> A1, A1, B3</span>
+        <button class="cancel-booking">Cancel</button>
+      </div>
+
+      <div class="booking-item">
+        <span><strong>Title</strong> Group Gather</span>
+        <span><strong>Seats</strong> A1, A1, B3</span>
+        <button class="cancel-booking">Cancel</button>
+      </div>
+
+      <div class="booking-item">
+        <span><strong>Title</strong> Group Gather</span>
+        <span><strong>Seats</strong> A1, A1, B3</span>
+        <button class="cancel-booking">Cancel</button>
+      </div>
+
+      <div class="booking-item">
+        <span><strong>Title</strong> Group Gather</span>
+        <span><strong>Seats</strong> A1, A1, B3</span>
+        <button class="cancel-booking">Cancel</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <div class="footer-logo">Seatify</div>
+        <p class="footer-note">
+          THIS PROJECT WAS DEVELOPED AS A REQUIREMENT OF THE WEB PROGRAMMING COURSE AT KUWAIT UNIVERSITY.<br>
+          ©2025 SEATIFY. ALL RIGHTS RESERVED.
+        </p>
+      </div>
+
+      <div class="footer-right">
+        <div class="footer-column">
+          <h4>Discover</h4>
+          <a href="homePage.html">Home</a>
+          <a href="#">Features</a>
+          <a href="#">FAQ</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Information</h4>
+          <a href="#">Terms</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Github</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Contact Us</h4>
+          <a href="mailto:hi@seatify.io">hi@seatify.io</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // dropdown menu toggle
+    const userIcon = document.getElementById('userIcon');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    userIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('show');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!dropdownMenu.contains(e.target) && !userIcon.contains(e.target)) {
+        dropdownMenu.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

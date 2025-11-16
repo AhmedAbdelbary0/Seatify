@@ -80,5 +80,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     });
 
+        // --- SIGN IN NAVBAR LINK ---
+    const openSignInNav = document.getElementById("openSignInNav");
+    const signInModalFromNav = document.getElementById("signInModal");
+
+    if (openSignInNav) {
+    openSignInNav.addEventListener("click", (e) => {
+        e.preventDefault();
+        signInModalFromNav.classList.add("show");
+    });
+    }
+
+
   });
   

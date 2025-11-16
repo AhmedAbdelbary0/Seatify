@@ -741,5 +741,103 @@ body {
   outline: none;
 }
 
+/* --- Bookings Page --- */
+
+.bookings-section {
+  background-color: #fff;
+  padding: 100px 140px;
+  margin-top: 0;
+}
+
+.bookings-title {
+  font-size: 42px;
+  font-weight: 900;
+  color: #1E293B;
+  margin-bottom: 40px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+.filters img {
+  width: 20px;
+  height: 20px;
+}
+
+.filter-label {
+  font-size: 18px;
+  color: #1E293B;
+  font-weight: 500;
+}
+
+.filter-btn {
+  border: 1px solid #7C3AED;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 500;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+  background-color: #7C3AED;
+  color: white;
+}
+
+.filter-btn:hover {
+  background-color: #7C3AED;
+  color: white;
+}
+
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.booking-item {
+  background-color: #FFF8E1;
+  border-radius: 30px;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-family: 'Cairo', sans-serif;
+  color: #1E293B;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.booking-item strong {
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+.cancel-booking {
+  border: none;
+  background: none;
+  color: #EF4444;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.cancel-booking:hover {
+  color: #b91c1c;
+}
+
+/* Disable gradient background only for My Bookings */
+body.no-gradient,
+body.no-gradient .hero {
+  background: #fff !important;
+  background-image: none !important;
+}
+
   
   
