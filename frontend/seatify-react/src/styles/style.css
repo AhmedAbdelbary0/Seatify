@@ -99,13 +99,13 @@ body {
   .dropdown-menu {
     position: absolute;
     right: -10px;
-    top: 60px;
+    top: 100%;
     background-color: white;
     border-radius: 39px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     width: 160px;
     padding: 12px 0;
-    display: none;
+    display: flex;
     flex-direction: column;
     z-index: 50;
   }
@@ -203,7 +203,7 @@ body {
   .primary-btn,
 .hero-actions button,
 .hero-actions a {
-  background-color: #7C3AED;
+  background-color: #FACC15;
   color: white;
   border: none;
   padding: 16px 36px; 
@@ -220,7 +220,7 @@ body {
 .primary-btn:hover,
 .hero-actions button:hover,
 .hero-actions a:hover {
-  background-color: #6D28D9;
+  background-color: #F0C733;
   transform: translateY(-2px);
 }
 
@@ -395,7 +395,7 @@ body {
 
   /* ===== MODAL (Create Event Popup) ===== */
   .modal {
-    display: none;
+    display: flex !important;   /* override default display:none */
     position: fixed;
     top: 0;
     left: 0;
@@ -407,9 +407,6 @@ body {
     z-index: 1000;
   }
   
-  .modal.show {
-    display: flex;
-  }
   
   .modal-content {
     background-color: #ffffff;
@@ -1005,3 +1002,4 @@ body.no-gradient .hero {
   font-size: 16px;
   color: #475569;
 }
+
