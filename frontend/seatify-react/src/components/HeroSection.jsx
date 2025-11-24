@@ -1,6 +1,8 @@
 import React from "react";
 import "../styles/style.css";
 import Navbar from "./Navbar";
+import { Link } from "react-router-dom";
+
 
 function HeroSection({ title, highlight, subtitle, buttonText, tagText, onButtonClick, children }) {
   return (
@@ -16,9 +18,16 @@ function HeroSection({ title, highlight, subtitle, buttonText, tagText, onButton
 
         {buttonText && (
           <div className="hero-buttons">
-            <button className="cta-button" onClick={onButtonClick}>
-              {buttonText}
-            </button>
+            {onButtonClick ? (
+          <button className="cta-button" onClick={onButtonClick}>
+            {buttonText}
+          </button>
+        ) : (
+          <Link to="/create" className="cta-button">
+            {buttonText}
+          </Link>
+        )}
+
             {tagText && <span className="free-tag">{tagText}</span>}
           </div>
         )}

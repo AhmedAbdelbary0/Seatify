@@ -58,7 +58,7 @@ function Navbar() {
               >
                 Sign in
               </a>
-              <button className="primary-btn">Get Started</button>
+              <button className="primary-btn" onClick={() => setShowSignUpModal(true)}>Get Started</button>
             </>
           )}
         </div>

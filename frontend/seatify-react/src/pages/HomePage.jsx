@@ -9,8 +9,8 @@ function HomePage() {
   return (
     <div className="home-page">
       <HeroSection
-        title="Manage Your"
-        highlight="Seats Smartly!"
+        title="Manage Your Seats"
+        highlight=" Smartly!"
         subtitle="Build layouts, share QR code, and manage bookings. Seatify makes seats booking faster and smarter."
         buttonText="See It in Action"
         tagText="Totally Free Experience"

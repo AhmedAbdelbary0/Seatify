@@ -462,37 +462,49 @@ body {
 
   /* ===== SEATS LAYOUT MODAL ===== */
 
-.seats-layout {
+  .seats-layout {
     width: 500px;
     text-align: center;
+    padding: 40px 60px;
   }
   
   .seat-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+    gap: 16px; /* even spacing between seats */
     justify-content: center;
-    margin: 30px 0;
+    margin: 30px auto 40px;
+    max-width: 340px; /* prevents seats from stretching too wide */
   }
   
-  .seat {
-    width: 40px;
-    height: 40px;
-    background-color: #E5E7EB;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
   
-  .seat.selected {
-    background-color: #7C3AED;
-  }
+.seat {
+  width: 40px;
+  height: 40px;
+  background-color: #E5E7EB;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1E293B;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 10px;
+}
+  
+ 
+.seat.selected {
+  background-color: #7C3AED;
+  color: #fff;
+}
   
   /* Layout sliders */
   .layout-sliders {
     display: flex;
     justify-content: space-between;
-    margin: 20px 0 40px 0;
+    margin: 10px 0 50px;
+    gap: 20px;
   }
   
   .slider-item {
@@ -502,10 +514,28 @@ body {
   .slider-item label {
     display: block;
     text-align: left;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 8px;
     color: #1E293B;
   }
+
+  .slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+.slider-container input[type="range"] {
+  flex: 1;
+  accent-color: #7C3AED;
+}
+
+
+.slider-container span {
+  font-weight: 700;
+  color: #1E293B;
+}
   
   /* ===== SIGN UP MODAL ===== */
   .modal-content {
@@ -812,7 +842,13 @@ body.no-gradient .hero {
   gap: 1rem;
 }
 
-.cta-button {
+
+
+.cta-button,
+.cta-button:link,
+.cta-button:visited,
+.cta-button:active,
+.cta-button:focus {
   background-color: #7C3AED;
   color: white;
   font-weight: 700;
@@ -821,11 +857,18 @@ body.no-gradient .hero {
   text-decoration: none;
   font-size: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  border: none;        /* ✅ ensures buttons have no border */
+  outline: none;       /* ✅ removes button focus border */
+  cursor: pointer;
+  text-align: center;  /* ✅ centers text inside <a> and <button> */
+  transition: all 0.2s ease;
 }
 
 .cta-button:hover {
-  background-color: #7C3AED;
+  background-color: #6D28D9;
 }
+
 
 .free-tag {
   font-size: 18px;
