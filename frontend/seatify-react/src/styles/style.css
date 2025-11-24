@@ -471,7 +471,7 @@ body {
   .seat-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-    gap: 16px; /* even spacing between seats */
+    gap: 10x; /* even spacing between seats */
     justify-content: center;
     margin: 30px auto 40px;
     max-width: 340px; /* prevents seats from stretching too wide */
