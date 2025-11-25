@@ -4,13 +4,20 @@ import Ellipse3 from "../styles/Ellipse3.png";
 import Person from "../styles/person.png";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
-
+import ResetPasswordModal from "./ResetPasswordModal";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+
+  // New handler: close sign-in and open reset in the parent (single place)
+  const handleOpenResetPassword = () => {
+    setShowSignInModal(false);
+    setShowResetPasswordModal(true);
+  };
 
   return (
     <>
@@ -72,12 +79,16 @@ function Navbar() {
           setIsSignedIn(true);
           setShowSignInModal(false);
         }}
-
         onSwitchToSignUp={() => {
           setShowSignInModal(false);
           setShowSignUpModal(true);
         }}
+        onForgotPassword={handleOpenResetPassword} // <-- pass new handler
+      />
 
+      <ResetPasswordModal
+        isOpen={showResetPasswordModal}
+        onClose={() => setShowResetPasswordModal(false)}
       />
 
       <SignUpModal

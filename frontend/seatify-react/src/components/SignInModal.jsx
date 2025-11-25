@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/style.css";
 
-function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp }) {
+function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp, onForgotPassword }) {
   if (!isOpen) return null;
 
   return (
@@ -24,7 +24,17 @@ function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp }) {
           <label>Password</label>
           <input type="password" placeholder="Enter your password" required />
 
-          <a href="#" className="forgot-password">Forget your password</a>
+          <a
+            href="#"
+            className="forgot-password"
+            onClick={(e) => {
+              e.preventDefault();
+              // delegate to parent which will close sign-in and open reset modal
+              if (typeof onForgotPassword === "function") onForgotPassword();
+            }}
+          >
+            Forgot your password?
+          </a>
 
           <div className="modal-actions">
             <button type="button" className="cancel-btn" onClick={onClose}>
