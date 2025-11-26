@@ -80,9 +80,6 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
               <button className="cancel-btn" onClick={onClose}>
                 Close
               </button>
-              <a href="#" className="download-link">
-                Download QR code
-              </a>
               <button
                 className="continue-btn"
                 onClick={() => {
@@ -105,6 +102,17 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
               <div><span className="seat seat-booked"></span>Booked</div>
               <div><span className="seat seat-available"></span>Available</div>
             </div>
+            <div className="modal-actions">
+              <button className="cancel-btn" onClick={() => setActiveTab("details")}>
+                Back
+              </button>
+              <button
+                className="continue-btn"
+                onClick={() => setActiveTab("qrcode")}
+              >
+                Continue
+              </button>
+            </div>
           </div>
         )}
 
@@ -115,7 +123,7 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
 
             <div className="qr-container">
               <QRCodeCanvas
-                value="https://seatify.io/event/EVT12345"
+                value="https://localhost:3000/event/EVT12345"
                 size={180}
                 bgColor="#ffffff"
                 fgColor="#5B21B6"
@@ -125,7 +133,26 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
             </div>
 
             <p className="event-id-text">Event ID: <strong>EVT12345</strong></p>
+            <div className="modal-actions">
+              <button className="cancel-btn" onClick={() => setActiveTab("details")}>
+                Back
+              </button>
+              <button
+                className="continue-btn"
+                onClick={() => {
+                  const canvas = document.querySelector("canvas");
+                  const link = document.createElement("a");
+                  link.href = canvas.toDataURL("image/png");
+                  link.download = `Seatify_EVT12345.png`;
+                  link.click();
+                }}
+              >
+                Save
+              </button>
+            </div>
           </div>
+
+          
         )}
       </div>
     </div>
