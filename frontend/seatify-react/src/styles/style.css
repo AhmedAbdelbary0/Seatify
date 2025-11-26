@@ -467,6 +467,15 @@ body {
     animation: fadeInUp 0.25s ease; /* subtle appear animation */
   }
   
+  /* Ensure AttendeesReport uses the standard modal sizing and doesn't fill the whole viewport */
+  .modal-content.attendees-report {
+    width: 550px;                /* match Event View width */
+    max-width: 90%;
+    padding: 40px 50px;         /* match Event View padding */
+    max-height: 80vh;           /* limit vertical size */
+    overflow-y: auto;           /* allow internal scrolling when content is tall */
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+  }
   
   .modal-content h2 {
     text-align: center;
@@ -1159,3 +1168,32 @@ body.no-gradient .hero {
   color: #475569;
 }
 
+.qr-modal {
+  text-align: center;
+  padding: 2.5rem 3rem;
+}
+
+.qr-modal h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.qr-modal p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 1.8rem;
+}
+
+.qr-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 2.5rem auto;
+}
+
+.qr-container canvas {
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

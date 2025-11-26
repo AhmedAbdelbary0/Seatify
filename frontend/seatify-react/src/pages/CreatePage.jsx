@@ -5,13 +5,15 @@ import HeroSection from "../components/HeroSection";
 import EventList from "../components/EventList";
 import CreateEventModal from "../components/CreateEventModal";
 import SeatsLayoutModal from "../components/SeatsLayoutModal";
-
+import QRCodeModal from "../components/QRCodeModal";
 
 import "../styles/style.css";
 
 function CreatePage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSeatsModal, setShowSeatsModal] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [eventId, setEventId] = useState(null);
 
   return (
     <div className="create-page">
@@ -21,7 +23,7 @@ function CreatePage() {
         subtitle="Create an event, add details, and roll out your seats for booking. It’s that simple."
         buttonText="Create Now"
         tagText="Takes Only One Minute"
-        onButtonClick={() => setShowCreateModal(true)} // ✅ open modal on button click
+        onButtonClick={() => setShowCreateModal(true)}
       />
 
       {/* Create Event Modal */}
@@ -31,7 +33,7 @@ function CreatePage() {
         onContinue={() => {
           setShowCreateModal(false);
           setShowSeatsModal(true);
-          console.log("Continue to next step...");
+          setEventId("EVT" + Math.floor(Math.random() * 100000)); // Mock event ID
         }}
       />
 
@@ -41,10 +43,16 @@ function CreatePage() {
         onClose={() => setShowSeatsModal(false)}
         onSave={() => {
           setShowSeatsModal(false);
-          console.log("Seats layout saved!");
-        }} />
+          setShowQRModal(true); 
+        }}
+      />
 
-      
+      {/*  QR CODE MODAL */}
+      <QRCodeModal
+        isOpen={showQRModal}
+        onClose={() => setShowQRModal(false)}
+        eventId={eventId}
+      />
 
       <EventList />
       <Footer />

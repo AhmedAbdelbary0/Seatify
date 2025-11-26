@@ -3,7 +3,7 @@ import "../styles/style.css";
 
 function WhySeatify() {
   return (
-    <section className="why-seatify">
+    <section id="features" className="why-seatify">
       <h2>Why Seatify?</h2>
       <p>Seamless Experience for Your Seats Booking</p>
       {/* Later we can make this dynamic too */}

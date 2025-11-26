@@ -25,18 +25,18 @@ function Navbar() {
         <div className="nav-left">
           <a href="/" className="logo">Seatify</a>
           <div className="nav-links-left">
-            <a href="#">Features</a>
+            <a href="/#features">Features</a>
             <a
-  href="/#faq"
-  onClick={(e) => {
-    if (window.location.pathname === "/") {
-      e.preventDefault();
-      document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" });
-    }
-  }}
->
-  FAQ
-</a>
+              href="/#faq"
+              onClick={(e) => {
+                if (window.location.pathname === "/") {
+                  e.preventDefault();
+                  document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              FAQ
+            </a>
           </div>
         </div>
 

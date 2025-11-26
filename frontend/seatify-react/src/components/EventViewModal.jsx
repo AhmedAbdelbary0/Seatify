@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/style.css";
 
-function EventViewModal({ isOpen, onClose }) {
+function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
   const [activeTab, setActiveTab] = useState("details");
 
   // Static seat layout configuration
@@ -82,7 +82,17 @@ function EventViewModal({ isOpen, onClose }) {
               <a href="#" className="download-link">
                 Download QR code
               </a>
-              <button className="continue-btn">Attendees Report</button>
+              <button
+                className="continue-btn"
+                onClick={() => {
+                  // Notify parent to open attendees report.
+                  if (typeof onOpenAttendeesReport === "function") {
+                    onOpenAttendeesReport();
+                  }
+                }}
+              >
+                Attendees Report
+              </button>
             </div>
           </div>
         )}
