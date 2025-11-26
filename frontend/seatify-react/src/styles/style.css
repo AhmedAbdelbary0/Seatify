@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: 'Cairo', sans-serif;
@@ -10,6 +14,9 @@ body {
 .logo {
     font-size: 24px;
     font-weight: 700;
+    color: white;           /* ensure visible on purple navbar */
+    text-decoration: none;  /* remove default underline */
+    cursor: pointer;        /* show clickable cursor */
   }
   
 
@@ -158,6 +165,59 @@ body {
   transform: translateY(0);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
+
+/* ===== FAQ SECTION ===== */
+.faq-section {
+  background-color: #f9fafb;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.faq-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 40px;
+}
+
+.faq-container {
+  width: 70%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.faq-item {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 20px 0;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.faq-toggle {
+  font-size: 18px;
+  color: #475569;
+}
+
+.faq-answer {
+  margin-top: 10px;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
   
   
   /* Events Section */
@@ -255,6 +315,61 @@ body {
     padding: 5px 15px;
     cursor: pointer;
   }
+
+  /* ===== EVENT VIEW MODAL ===== */
+.event-view {
+  width: 550px;
+  padding: 40px 50px;
+  text-align: left;
+}
+
+.event-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0 30px;
+}
+
+.tab-btn {
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 600;
+  color: #1E293B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  background-color: #EEE7FF;
+  color: #7C3AED;
+  border: 1.5px solid #7C3AED;
+}
+
+.event-details label {
+  display: block;
+  font-weight: 600;
+  color: #1E293B;
+  margin-top: 20px;
+}
+
+.event-text {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 5px 0 10px;
+  color: #1E293B;
+}
+
+.download-link {
+  color: #7C3AED;
+  text-decoration: underline;
+  font-weight: 500;
+  font-size: 15px;
+  margin-right: 10px;
+}
+
   
   /* Footer */
   .footer {

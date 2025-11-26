@@ -23,10 +23,20 @@ function Navbar() {
     <>
       <nav className="navbar seatify-navbar">
         <div className="nav-left">
-          <div className="logo">Seatify</div>
+          <a href="/" className="logo">Seatify</a>
           <div className="nav-links-left">
             <a href="#">Features</a>
-            <a href="#">FAQ</a>
+            <a
+  href="/#faq"
+  onClick={(e) => {
+    if (window.location.pathname === "/") {
+      e.preventDefault();
+      document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }}
+>
+  FAQ
+</a>
           </div>
         </div>
 
@@ -83,7 +93,7 @@ function Navbar() {
           setShowSignInModal(false);
           setShowSignUpModal(true);
         }}
-        onForgotPassword={handleOpenResetPassword} // <-- pass new handler
+        onForgotPassword={handleOpenResetPassword}
       />
 
       <ResetPasswordModal

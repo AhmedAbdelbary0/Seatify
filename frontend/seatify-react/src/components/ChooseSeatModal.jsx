@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/style.css";
 
-function ChooseSeatModal({ isOpen, onClose }) {
+function ChooseSeatModal({ isOpen, onClose, onContinue }) {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const rows = 5;
   const cols = 8;
@@ -68,7 +68,22 @@ function ChooseSeatModal({ isOpen, onClose }) {
           <button className="cancel-btn" onClick={onClose}>
             Back
           </button>
-          <button className="continue-btn">Continue</button>
+          <button
+            className="continue-btn"
+            onClick={() => {
+              // prevent continuing without selecting seats
+              if (selectedSeats.length === 0) return;
+              if (typeof onContinue === "function") {
+                onContinue({
+                  seats: selectedSeats,
+                  name: null,
+                  dateTime: null,
+                });
+              }
+            }}
+          >
+            Continue
+          </button>
         </div>
       </div>
     </div>
