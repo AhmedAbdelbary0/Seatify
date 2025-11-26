@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { QRCodeCanvas } from "qrcode.react";
 import "../styles/style.css";
 
 function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
@@ -109,7 +110,21 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
 
         {activeTab === "qrcode" && (
           <div className="event-qrcode">
-            <p>QR code preview here...</p>
+            <h3>QR Code</h3>
+            <p className="event-qrcode-subtext">Share this QR with attendees to book seats</p>
+
+            <div className="qr-container">
+              <QRCodeCanvas
+                value="https://seatify.io/event/EVT12345"
+                size={180}
+                bgColor="#ffffff"
+                fgColor="#5B21B6"
+                level="H"
+                includeMargin={false}
+              />
+            </div>
+
+            <p className="event-id-text">Event ID: <strong>EVT12345</strong></p>
           </div>
         )}
       </div>
