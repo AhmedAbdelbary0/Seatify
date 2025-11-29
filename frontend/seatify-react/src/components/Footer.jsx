@@ -7,7 +7,7 @@ function Footer() {
       <div className="footer-content">
         <div className="footer-logo">
           <h1>Seatify</h1>
-          <p>
+          <p className="footer-note">
             THIS PROJECT WAS DEVELOPED AS A REQUIREMENT OF THE WEB PROGRAMMING
             COURSE AT KUWAIT UNIVERSITY. ©2025 SEATIFY. ALL RIGHTS RESERVED.
           </p>

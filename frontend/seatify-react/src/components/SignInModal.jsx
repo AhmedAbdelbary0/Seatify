@@ -29,7 +29,6 @@ function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp, onForgotPass
             className="forgot-password"
             onClick={(e) => {
               e.preventDefault();
-              // delegate to parent which will close sign-in and open reset modal
               if (typeof onForgotPassword === "function") onForgotPassword();
             }}
           >

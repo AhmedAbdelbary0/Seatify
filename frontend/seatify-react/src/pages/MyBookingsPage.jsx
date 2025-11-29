@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/style.css";
-import FilterIcon from "../styles/Filter.png";
+import FilterIcon from "../assets/Filter.png";
 
 function MyBookingsPage() {
   return (

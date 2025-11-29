@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/style.css";
-import Ellipse3 from "../styles/Ellipse3.png";
-import Person from "../styles/person.png";
+import Ellipse3 from "../assets/Ellipse3.png";
+import Person from "../assets/person.png";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import ResetPasswordModal from "./ResetPasswordModal";
@@ -13,7 +13,6 @@ function Navbar() {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
 
-  // New handler: close sign-in and open reset in the parent (single place)
   const handleOpenResetPassword = () => {
     setShowSignInModal(false);
     setShowResetPasswordModal(true);

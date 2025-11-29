@@ -467,7 +467,6 @@ body {
     animation: fadeInUp 0.25s ease; /* subtle appear animation */
   }
   
-  /* Ensure AttendeesReport uses the standard modal sizing and doesn't fill the whole viewport */
   .modal-content.attendees-report {
     width: 550px;                /* match Event View width */
     max-width: 90%;
@@ -1050,10 +1049,10 @@ body.no-gradient .hero {
   font-size: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   display: inline-block;
-  border: none;        /* ✅ ensures buttons have no border */
-  outline: none;       /* ✅ removes button focus border */
+  border: none;        
+  outline: none;       
   cursor: pointer;
-  text-align: center;  /* ✅ centers text inside <a> and <button> */
+  text-align: center;  
   transition: all 0.2s ease;
 }
 
@@ -1102,6 +1101,14 @@ body.no-gradient .hero {
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 1rem;
+}
+.footer-note {
+  font-size: 12px;
+  font-weight: 50;
+  color: #F9FAFB;
+  line-height: 1.6;
+  max-width: 380px;
+  text-transform: uppercase;
 }
 
 .footer-section a {

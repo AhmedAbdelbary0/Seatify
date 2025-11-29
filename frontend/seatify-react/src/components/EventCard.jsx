@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../styles/style.css";
 import EventViewModal from "./EventViewModal";
-import AttendeesReport from "./AttendeesReport"; // added import
+import AttendeesReport from "./AttendeesReport";
 
 function EventCard() {
   const [showModal, setShowModal] = useState(false);
-  const [showReport, setShowReport] = useState(false); // new state
+  const [showReport, setShowReport] = useState(false);
 
   return (
     <>

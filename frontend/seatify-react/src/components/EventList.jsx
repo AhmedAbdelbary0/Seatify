@@ -1,6 +1,6 @@
 import React from "react";
 import EventCard from "./EventCard";
-import FilterIcon from "../styles/Filter.png";
+import FilterIcon from "../assets/Filter.png";
 
 function EventList() {
   return (
