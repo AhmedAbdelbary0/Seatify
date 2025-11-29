@@ -54,7 +54,7 @@ function Navbar() {
                 {menuOpen && (
                   <div className="dropdown-menu">
                   <a href="/bookings">My Bookings</a>
-                  <a href="#">Help</a>
+                  <a href="mailto:hi@seatify.io">Help</a>
                   <a
                     href="#"
                     className="signout"
