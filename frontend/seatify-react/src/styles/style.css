@@ -701,6 +701,26 @@ body {
   font-weight: 700;
   color: #1E293B;
 }
+
+/* View-event specific spacing overrides */
+.view-seat-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;           /* vertical spacing between rows (was 8px) */
+}
+
+.view-seat-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;           /* horizontal spacing between seats (was 8px) */
+}
+
+.view-seat {
+  margin: 0;           /* keep zero margin so gap controls spacing */
+  /* optional: slightly smaller/bigger seat size if needed */
+  /* width: 36px;
+     height: 36px; */
+}
   
   /* ===== SIGN UP MODAL ===== */
   .modal-content {

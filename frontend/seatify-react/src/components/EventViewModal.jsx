@@ -40,7 +40,7 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
     hour12: false,
   });
 
-  const layout = Array.isArray(event.layout) ? event.layout : [];
+  const layout = Array.isArray(event?.layout) ? event.layout : [];
   console.log("Layout inside EventViewModal:", layout); // 🔍 must be non-empty
 
   let maxRow = -1;
@@ -85,13 +85,13 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
         });
 
         rowSeats.push(
-          <div key={`${r}-${c}`} className="seat">
+          <div key={`${r}-${c}`} className="seat view-seat">
             {seat ? seat.seatNumber : ""}
           </div>
         );
       }
       seatGrid.push(
-        <div key={r} className="seat-row">
+        <div key={r} className="seat-row view-seat-row">
           {rowSeats}
         </div>
       );
@@ -159,7 +159,7 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
               <p>No seat layout defined.</p>
             ) : (
               <div
-                className="seat-grid"
+                className="seat-grid view-seat-grid"
                 style={{ gridTemplateColumns: `repeat(${numCols}, 1fr)` }}
               >
                 {seatGrid}
