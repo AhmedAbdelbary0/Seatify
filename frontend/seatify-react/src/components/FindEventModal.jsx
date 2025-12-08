@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/style.css";
 
-function FindEventModal({ isOpen, onClose, onContinue }) {
+function FindEventModal({ isOpen, onClose, onContinue, error }) {
+  const [eventId, setEventId] = useState("");
+
   if (!isOpen) return null;
 
   return (
@@ -10,9 +12,26 @@ function FindEventModal({ isOpen, onClose, onContinue }) {
         <h2>Find Event</h2>
         <p>Enter event ID to continue</p>
 
-        <form className="find-event-form">
+        {/* optional error display from parent */}
+        {error && <p className="error-text">{error}</p>}
+
+        <form
+          className="find-event-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!eventId.trim()) return;
+            onContinue(eventId.trim());
+          }}
+        >
           <label htmlFor="eventID">Event ID</label>
-          <input type="text" id="eventID" placeholder="Enter event ID" required />
+          <input
+            type="text"
+            id="eventID"
+            placeholder="Enter event ID"
+            required
+            value={eventId}
+            onChange={(e) => setEventId(e.target.value)}
+          />
 
           <div className="modal-actions">
             <button
@@ -23,14 +42,10 @@ function FindEventModal({ isOpen, onClose, onContinue }) {
               Cancel
             </button>
             <button
-            type="submit"
-            className="continue-btn"
-            onClick={(e) => {
-                e.preventDefault();
-                onContinue(); 
-            }}
+              type="submit"
+              className="continue-btn"
             >
-            Continue
+              Continue
             </button>
           </div>
         </form>

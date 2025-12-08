@@ -7,6 +7,7 @@ import FindEventModal from "../components/FindEventModal";
 import ChooseSeatModal from "../components/ChooseSeatModal";
 import ConfirmBookingModal from "../components/ConfirmBookingModal";
 import FaqSection from "../components/FaqSection";
+import api from "../api/axios"; // <-- add
 
 import "../styles/style.css";
 
@@ -15,11 +16,41 @@ function HomePage() {
   const [showChooseSeatModal, setShowChooseSeatModal] = useState(false);
   const [showConfirmBookingModal, setShowConfirmBookingModal] = useState(false);
   const [bookingDetails, setBookingDetails] = useState(null);
+  const [findEventError, setFindEventError] = useState(null); // optional: error to pass to modal
 
   const handleChooseContinue = (details) => {
-    setBookingDetails(details);
+    setBookingDetails((prev) => ({
+      ...prev,
+      ...details,
+    }));
     setShowChooseSeatModal(false);
     setShowConfirmBookingModal(true);
+  };
+
+  const handleFindEventContinue = async (eventId) => {
+    try {
+      setFindEventError(null);
+      const res = await api.get(`/api/v1/events/${eventId}`);
+      const foundEvent = res.data.data.event;
+
+      // preload bookingDetails with event info
+      setBookingDetails({
+        eventId: foundEvent._id,
+        eventTitle: foundEvent.title,
+        eventDate: foundEvent.date,
+        event: foundEvent,
+      });
+
+      setShowFindEventModal(false);
+      setShowChooseSeatModal(true);
+    } catch (err) {
+      console.error("Failed to find event:", err);
+      setFindEventError(
+        err?.response?.status === 404
+          ? "Event not found. Please check the ID."
+          : "Failed to load event. Please try again."
+      );
+    }
   };
 
   return (
@@ -30,7 +61,10 @@ function HomePage() {
         subtitle="Build layouts, share QR code, and manage bookings. Seatify makes seats booking faster and smarter."
         buttonText="See It in Action"
         tagText="Totally Free Experience"
-        onButtonClick={() => setShowFindEventModal(true)}
+        onButtonClick={() => {
+          setFindEventError(null);
+          setShowFindEventModal(true);
+        }}
       />
 
       <WhySeatify />
@@ -40,16 +74,17 @@ function HomePage() {
       <FindEventModal
         isOpen={showFindEventModal}
         onClose={() => setShowFindEventModal(false)}
-        onContinue={() => {
-          setShowFindEventModal(false);
-          setShowChooseSeatModal(true); 
-        }}
+        // 🔹 pass handler and optional error
+        onContinue={handleFindEventContinue}
+        error={findEventError}
       />
 
       <ChooseSeatModal
         isOpen={showChooseSeatModal}
         onClose={() => setShowChooseSeatModal(false)}
         onContinue={handleChooseContinue}
+        // optionally pass found event down:
+        event={bookingDetails?.event}
       />
 
       <ConfirmBookingModal

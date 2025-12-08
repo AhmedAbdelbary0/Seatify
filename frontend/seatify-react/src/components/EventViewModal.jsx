@@ -131,6 +131,10 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
             <label>Title</label>
             <p className="event-text">{event.title}</p>
 
+            
+            <label>Event ID</label>
+            <p className="event-text">{event._id}</p>
+
             <label>Date & Time</label>
             <p className="event-text">{formattedDate}</p>
 
