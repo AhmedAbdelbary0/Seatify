@@ -5,11 +5,6 @@ import "../styles/style.css";
 function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendeesReport }) {
   const [activeTab, setActiveTab] = useState("details");
 
-  // Static seat layout configuration
-  const rows = 5;
-  const cols = 8;
-  const bookedSeats = ["B2", "D4", "C3"]; // Example booked seats
-
   if (!isOpen) return null;
 
   if (loading) {
@@ -33,7 +28,7 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
     );
   }
 
-  if (!event) return null; // no data yet
+  if (!event) return null;
 
   const eventDate = new Date(event.date);
   const formattedDate = eventDate.toLocaleString("en-GB", {
@@ -45,33 +40,63 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
     hour12: false,
   });
 
-  // Generate seat layout dynamically
-  const renderSeatGrid = () => {
-    const seats = [];
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const seatId = `${String.fromCharCode(65 + r)}${c + 1}`;
-        const isBooked = bookedSeats.includes(seatId);
-        seats.push(
-          <div
-            key={seatId}
-            className={`seat ${
-              isBooked ? "seat-booked" : "seat-available"
-            }`}
-          ></div>
+  const layout = Array.isArray(event.layout) ? event.layout : [];
+  console.log("Layout inside EventViewModal:", layout); // 🔍 must be non-empty
+
+  let maxRow = -1;
+  let maxColIndex = -1;
+
+  layout.forEach((seat) => {
+    const r = Number(seat.row);
+    if (Number.isNaN(r)) return;
+
+    const match = typeof seat.seatNumber === "string"
+      ? seat.seatNumber.match(/([A-Z]+)(\d+)/i)
+      : null;
+
+    if (!match) return;
+    const colIndex = Number(match[2]) - 1;
+
+    if (!Number.isNaN(colIndex)) {
+      if (r > maxRow) maxRow = r;
+      if (colIndex > maxColIndex) maxColIndex = colIndex;
+    }
+  });
+
+  const numRows = maxRow + 1;
+  const numCols = maxColIndex + 1;
+
+  const seatGrid = [];
+  if (numRows > 0 && numCols > 0) {
+    for (let r = 0; r < numRows; r++) {
+      const rowSeats = [];
+      for (let c = 0; c < numCols; c++) {
+        const seat = layout.find((s) => {
+          const row = Number(s.row);
+          if (row !== r) return false;
+
+          const m = typeof s.seatNumber === "string"
+            ? s.seatNumber.match(/([A-Z]+)(\d+)/i)
+            : null;
+          if (!m) return false;
+
+          const colIndex = Number(m[2]) - 1;
+          return colIndex === c;
+        });
+
+        rowSeats.push(
+          <div key={`${r}-${c}`} className="seat">
+            {seat ? seat.seatNumber : ""}
+          </div>
         );
       }
+      seatGrid.push(
+        <div key={r} className="seat-row">
+          {rowSeats}
+        </div>
+      );
     }
-
-    return (
-      <div
-        className="seat-grid"
-        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
-      >
-        {seats}
-      </div>
-    );
-  };
+  }
 
   return (
     <div className="modal">
@@ -116,7 +141,6 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
               <button
                 className="continue-btn"
                 onClick={() => {
-                  // Notify parent to open attendees report.
                   if (typeof onOpenAttendeesReport === "function") {
                     onOpenAttendeesReport();
                   }
@@ -130,7 +154,17 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
 
         {activeTab === "seats" && (
           <div className="event-seats">
-            {renderSeatGrid()}
+            <h3>Seat Layout</h3>
+            {seatGrid.length === 0 ? (
+              <p>No seat layout defined.</p>
+            ) : (
+              <div
+                className="seat-grid"
+                style={{ gridTemplateColumns: `repeat(${numCols}, 1fr)` }}
+              >
+                {seatGrid}
+              </div>
+            )}
             <div className="legend">
               <div><span className="seat seat-booked"></span>Booked</div>
               <div><span className="seat seat-available"></span>Available</div>
@@ -184,8 +218,6 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
               </button>
             </div>
           </div>
-
-          
         )}
       </div>
     </div>

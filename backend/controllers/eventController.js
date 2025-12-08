@@ -101,7 +101,7 @@ exports.getEventById = asyncHandler(async (req, res, next) => {
 
   if (!event) return next(new AppError('Event not found', 404));
 
-  // Generate QR for convenience (frontend may show it)
+  // Generate QR ...
   const qr = await generateEventQRCode(event._id);
 
   res.status(200).json({

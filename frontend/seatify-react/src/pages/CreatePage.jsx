@@ -85,6 +85,8 @@ function CreatePage() {
             });
 
             const createdEvent = response.data.data.event;
+            console.log("Created event from API:", createdEvent); // 🔍 check layout here
+
             const newEventId = createdEvent._id;
 
             setCreatedEvents((prev) => [...prev, createdEvent]);

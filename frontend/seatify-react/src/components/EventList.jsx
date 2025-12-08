@@ -16,11 +16,11 @@ function EventList({ events, setEvents }) {
     try {
       setViewLoading(true);
       setViewError(null);
-      setShowViewModal(true); // open immediately, can show spinner
+      setShowViewModal(true);
 
-      // 🔹 fetch full event info from backend
       const res = await api.get(`/api/v1/events/${event._id}`);
       const fullEvent = res.data.data.event;
+      console.log("Full event in handleView:", fullEvent); // 🔍 check layout here
 
       setSelectedEvent(fullEvent);
     } catch (err) {

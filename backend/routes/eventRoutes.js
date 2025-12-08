@@ -15,7 +15,7 @@ router.get('/:eventId', eventController.getEventById); // TESTED ✅
 router.use(authenticate);
 
 // Create a new event
-// router.post('/', eventController.createEvent); // TESTED ✅
+router.post('/', eventController.createEvent); // ✅ ENABLED
 
 // Events the current user created
 router.get('/me/created/events', eventController.getMyCreatedEvents); // TESTED ✅
