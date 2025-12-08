@@ -15,6 +15,7 @@ function CreatePage() {
   const [showQRModal, setShowQRModal] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [createdEvents, setCreatedEvents] = useState([]);
+  const [pendingEventData, setPendingEventData] = useState(null); // 🔹 temp storage
 
   useEffect(() => {
     const fetchCreatedEvents = async () => {
@@ -56,39 +57,47 @@ function CreatePage() {
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onContinue={async (eventData) => {
-          try {
-            setShowCreateModal(false);
-        
-            const response = await api.post("/api/v1/events", {
-              title: eventData.title,
-              date: eventData.date,
-              maxSeatsPerPerson: eventData.seatLimit,   // FIXED NAME
-              totalSeats: 100,                          // TEMP — real value comes after layout
-              layout: []                                // TEMP — will fill after seat layout modal
-            });
-        
-            const createdEvent = response.data.data.event;
-            const newEventId = createdEvent._id;
-
-            setCreatedEvents((prev) => [...prev, createdEvent]);
-            
-            setEventId(newEventId);
-            setShowSeatsModal(true);
-        
-          } catch (err) {
-            console.error("Failed to create event:", err);
-            alert("Failed to create event. Please try again.");
-          }
+          // 🔹 just store data & open seats modal; no API call yet
+          setShowCreateModal(false);
+          setPendingEventData(eventData);
+          setShowSeatsModal(true);
         }}
       />
 
       {/* Seats Layout Modal */}
       <SeatsLayoutModal
         isOpen={showSeatsModal}
-        onClose={() => setShowSeatsModal(false)}
-        onSave={() => {
+        onClose={() => {
           setShowSeatsModal(false);
-          setShowQRModal(true); 
+          setPendingEventData(null); // reset if user backs out
+        }}
+        onSave={async ({ layout, totalSeats }) => {
+          try {
+            if (!pendingEventData) return;
+
+            // 🔹 Now we have everything: title, date, maxSeatsPerPerson, totalSeats, layout
+            const response = await api.post("/api/v1/events", {
+              title: pendingEventData.title,
+              date: pendingEventData.date,
+              maxSeatsPerPerson: pendingEventData.seatLimit,
+              totalSeats,
+              layout, // 🔹 now an array of seat objects
+            });
+
+            const createdEvent = response.data.data.event;
+            const newEventId = createdEvent._id;
+
+            setCreatedEvents((prev) => [...prev, createdEvent]);
+            setEventId(newEventId);
+
+            // clear temp + move to QR modal
+            setPendingEventData(null);
+            setShowSeatsModal(false);
+            setShowQRModal(true);
+          } catch (err) {
+            console.error("Failed to create event with layout:", err);
+            alert("Failed to create event. Please try again.");
+          }
         }}
       />
 

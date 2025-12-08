@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../styles/style.css";
 
 function SeatsLayoutModal({ isOpen, onClose, onSave }) {
   const [rows, setRows] = useState(4);
   const [cols, setCols] = useState(4);
 
-
-  // Generate seat grid dynamically
+  // Generate seat grid dynamically (for display only)
   const generateGrid = () => {
     const grid = [];
     for (let r = 0; r < rows; r++) {
@@ -30,6 +29,27 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
 
   if (!isOpen) return null;
 
+  const handleContinue = () => {
+    const layout = [];
+    for (let r = 0; r < rows; r++) {
+      const rowLabel = String.fromCharCode(65 + r); // A, B, C...
+      for (let c = 0; c < cols; c++) {
+        const seatNumber = `${rowLabel}${c + 1}`;
+        // 🔹 match backend schema: seat objects with seatNumber
+        layout.push({
+          seatNumber,
+          row: r,
+          col: c,
+          // status: 'available', // if your schema has other fields, add them here
+        });
+      }
+    }
+
+    const totalSeats = rows * cols;
+
+    onSave({ layout, totalSeats });
+  };
+
   return (
     <>
       {/* SEATS LAYOUT MODAL */}
@@ -38,7 +58,7 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
           <div className="modal-content seats-layout">
             <h2>Seats Layout</h2>
             <p>Design how your seats are layouted</p>
-  
+
             {/* Seat Grid */}
             <div
               id="seatGrid"
@@ -47,7 +67,7 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
             >
               {generateGrid()}
             </div>
-  
+
             {/* Sliders */}
             <div className="layout-sliders">
               <div className="slider-item">
@@ -64,7 +84,7 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
                   <span id="rowsValue">{rows}</span>
                 </div>
               </div>
-  
+
               <div className="slider-item">
                 <label htmlFor="colsSlider">Columns</label>
                 <div className="slider-container">
@@ -80,7 +100,7 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
                 </div>
               </div>
             </div>
-  
+
             <div className="modal-actions">
               <button type="button" className="cancel-btn" onClick={onClose}>
                 Back
@@ -88,9 +108,7 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
               <button
                 type="button"
                 className="continue-btn"
-                onClick={() => {
-                  onSave();
-                }}
+                onClick={handleContinue}
               >
                 Continue
               </button>
@@ -98,10 +116,8 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
           </div>
         </div>
       )}
-  
     </>
   );
-  
 }
 
 export default SeatsLayoutModal;

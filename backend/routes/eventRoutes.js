@@ -15,13 +15,20 @@ router.get('/:eventId', eventController.getEventById); // TESTED ✅
 router.use(authenticate);
 
 // Create a new event
-router.post('/', eventController.createEvent); // TESTED ✅
+// router.post('/', eventController.createEvent); // TESTED ✅
 
 // Events the current user created
 router.get('/me/created/events', eventController.getMyCreatedEvents); // TESTED ✅
 
 // Events the current user joined
 router.get('/me/joined/events', participantController.getMyJoinedEvents); // TESTED ✅
+
+// 🔹 Update event (layout / totalSeats etc.)
+// router.patch(
+//   '/:eventId',
+//   eventController.verifyOwnership,
+//   eventController.updateEvent
+// );
 
 // Delete event (creator only) TESTED ✅
 router.delete(

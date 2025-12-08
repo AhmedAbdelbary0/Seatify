@@ -31,6 +31,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
   const { title, description, date, maxSeatsPerPerson, totalSeats, layout } =
     req.body;
 
+  // now we expect totalSeats again
   if (!title || !date || !maxSeatsPerPerson || !totalSeats) {
     return next(new AppError('Missing required fields', 400));
   }
@@ -64,6 +65,32 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
       qrCode: qr.qrCode, // Base64 PNG
       joinUrl: qr.joinUrl,
     },
+  });
+});
+
+// 🔹 UPDATE EVENT (layout / totalSeats)
+exports.updateEvent = asyncHandler(async (req, res, next) => {
+  const { layout, totalSeats } = req.body;
+
+  if (!layout || !Array.isArray(layout) || !totalSeats) {
+    return next(new AppError('Missing layout or totalSeats', 400));
+  }
+
+  const event = await Event.findByIdAndUpdate(
+    req.params.eventId,
+    {
+      layout,
+      totalSeats,
+      availableSeats: totalSeats, // or keep existing availableSeats if you prefer
+    },
+    { new: true }
+  );
+
+  if (!event) return next(new AppError('Event not found', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: { event },
   });
 });
 
