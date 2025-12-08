@@ -6,7 +6,6 @@ function EventCard({ event, onView, onDelete }) {
     <>
       <div className="event-card">
         <h3>{event.title}</h3>
-        <p>{event.description || "No description provided"}</p>
 
         <p>
           <strong>Date & Time</strong>

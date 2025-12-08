@@ -67,8 +67,11 @@ function CreatePage() {
               layout: []                                // TEMP — will fill after seat layout modal
             });
         
-            const newEventId = response.data.data.event._id;
-        
+            const createdEvent = response.data.data.event;
+            const newEventId = createdEvent._id;
+
+            setCreatedEvents((prev) => [...prev, createdEvent]);
+            
             setEventId(newEventId);
             setShowSeatsModal(true);
         
@@ -96,9 +99,9 @@ function CreatePage() {
         eventId={eventId}
       />
 
-      <EventList
-        events={createdEvents}
-        setEvents={setCreatedEvents}
+      <EventList 
+        events={createdEvents} 
+        setEvents={setCreatedEvents} 
       />
       <Footer />
     </div>

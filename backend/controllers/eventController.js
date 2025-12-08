@@ -91,11 +91,11 @@ exports.getEventById = asyncHandler(async (req, res, next) => {
 
 exports.getMyCreatedEvents = asyncHandler(async (req, res) => {
   const events = await Event.find({ creatorId: req.user._id }).select(
-    "title description date availableSeats"
+    'title description date availableSeats' // _id is included by default
   );
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     results: events.length,
     data: { events },
   });
