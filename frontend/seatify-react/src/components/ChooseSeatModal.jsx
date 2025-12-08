@@ -20,16 +20,19 @@ function ChooseSeatModal({ isOpen, onClose, onContinue }) {
     );
   };
 
-  const seats = [];
+  // build grid as rows -> seats, to reuse same view layout CSS
+  const seatGrid = [];
   for (let r = 0; r < rows; r++) {
+    const rowSeats = [];
     for (let c = 0; c < cols; c++) {
       const seatId = `${String.fromCharCode(65 + r)}${c + 1}`;
       const isBooked = bookedSeats.includes(seatId);
       const isSelected = selectedSeats.includes(seatId);
-      seats.push(
+
+      rowSeats.push(
         <div
           key={seatId}
-          className={`seat ${
+          className={`seat view-seat ${
             isBooked
               ? "seat-booked"
               : isSelected
@@ -37,25 +40,44 @@ function ChooseSeatModal({ isOpen, onClose, onContinue }) {
               : "seat-available"
           }`}
           onClick={() => handleSeatClick(seatId)}
-        ></div>
+        />
       );
     }
+    seatGrid.push(
+      <div key={r} className="seat-row view-seat-row">
+        {rowSeats}
+      </div>
+    );
   }
 
   return (
     <div className="modal">
+      {/* use same width/padding style as SeatsLayoutModal */}
       <div className="modal-content seats-layout">
         <h2>Choose Seat</h2>
         <p>Choose your seat to continue</p>
 
-        <div className="seat-grid" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
-          {seats}
+        {/* match layout wrapper used by SeatsLayoutModal */}
+        <div
+          className="seat-grid view-seat-grid"
+          style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+        >
+          {seatGrid}
         </div>
 
         <div className="legend">
-          <div><span className="seat seat-booked"></span>Booked</div>
-          <div><span className="seat seat-selected"></span>Selected</div>
-          <div><span className="seat seat-available"></span>Available</div>
+          <div>
+            <span className="seat seat-booked" />
+            Booked
+          </div>
+          <div>
+            <span className="seat seat-selected" />
+            Selected
+          </div>
+          <div>
+            <span className="seat seat-available" />
+            Available
+          </div>
         </div>
 
         <p className="seat-count">
@@ -71,7 +93,6 @@ function ChooseSeatModal({ isOpen, onClose, onContinue }) {
           <button
             className="continue-btn"
             onClick={() => {
-              // prevent continuing without selecting seats
               if (selectedSeats.length === 0) return;
               if (typeof onContinue === "function") {
                 onContinue({
