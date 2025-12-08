@@ -9,10 +9,26 @@ function EventList({ events, setEvents }) {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [viewLoading, setViewLoading] = useState(false);
+  const [viewError, setViewError] = useState(null);
 
-  const handleView = (event) => {
-    setSelectedEvent(event);
-    setShowViewModal(true);
+  const handleView = async (event) => {
+    try {
+      setViewLoading(true);
+      setViewError(null);
+      setShowViewModal(true); // open immediately, can show spinner
+
+      // 🔹 fetch full event info from backend
+      const res = await api.get(`/api/v1/events/${event._id}`);
+      const fullEvent = res.data.data.event;
+
+      setSelectedEvent(fullEvent);
+    } catch (err) {
+      console.error("Failed to load event details:", err);
+      setViewError("Failed to load event details.");
+    } finally {
+      setViewLoading(false);
+    }
   };
 
   const handleDelete = async (eventId) => {
@@ -62,7 +78,13 @@ function EventList({ events, setEvents }) {
       <EventViewModal
         isOpen={showViewModal}
         event={selectedEvent}
-        onClose={() => setShowViewModal(false)}
+        loading={viewLoading}        // 🔹 pass loading
+        error={viewError}            // 🔹 pass error (optional)
+        onClose={() => {
+          setShowViewModal(false);
+          setSelectedEvent(null);
+          setViewError(null);
+        }}
         onOpenAttendeesReport={() => {
           setShowViewModal(false);
           setShowReportModal(true);

@@ -16,9 +16,12 @@ function CreateEventModal({ isOpen, onClose, onContinue }) {
           className="create-event-form"
           onSubmit={(e) => {
             e.preventDefault();
+            const rawDate = e.target.eventDate.value; // "2025-12-13T22:05"
+            const isoDate = rawDate ? new Date(rawDate).toISOString() : null;
+
             onContinue({
               title: e.target.eventTitle.value,
-              date: e.target.eventDate.value,
+              date: isoDate,
               seatLimit: seatValue
             });
           }}

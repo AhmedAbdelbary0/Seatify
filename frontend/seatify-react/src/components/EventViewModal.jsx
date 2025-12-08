@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import "../styles/style.css";
 
-function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
+function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendeesReport }) {
   const [activeTab, setActiveTab] = useState("details");
 
   // Static seat layout configuration
@@ -11,6 +11,39 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
   const bookedSeats = ["B2", "D4", "C3"]; // Example booked seats
 
   if (!isOpen) return null;
+
+  if (loading) {
+    return (
+      <div className="modal">
+        <div className="modal-content">
+          <p>Loading event details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="modal">
+        <div className="modal-content">
+          <p>{error}</p>
+          <button type="button" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!event) return null; // no data yet
+
+  const eventDate = new Date(event.date);
+  const formattedDate = eventDate.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 
   // Generate seat layout dynamically
   const renderSeatGrid = () => {
@@ -43,7 +76,7 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
   return (
     <div className="modal">
       <div className="modal-content event-view">
-        <h2>Event View</h2>
+        <h2>{event.title}</h2>
 
         {/* Tabs */}
         <div className="event-tabs">
@@ -71,10 +104,10 @@ function EventViewModal({ isOpen, onClose, onOpenAttendeesReport }) {
         {activeTab === "details" && (
           <div className="event-details">
             <label>Title</label>
-            <p className="event-text">This is a Title</p>
+            <p className="event-text">{event.title}</p>
 
             <label>Date & Time</label>
-            <p className="event-text">01/01/2026 03:00 pm</p>
+            <p className="event-text">{formattedDate}</p>
 
             <div className="modal-actions">
               <button className="cancel-btn" onClick={onClose}>

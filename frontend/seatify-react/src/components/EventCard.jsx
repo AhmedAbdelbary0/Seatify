@@ -2,6 +2,16 @@ import React from "react";
 import "../styles/style.css";
 
 function EventCard({ event, onView, onDelete }) {
+  const eventDate = new Date(event.date);
+  const formattedDate = eventDate.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }); // e.g. "13 Dec 2025, 22:05"
+
   return (
     <>
       <div className="event-card">
@@ -10,7 +20,7 @@ function EventCard({ event, onView, onDelete }) {
         <p>
           <strong>Date & Time</strong>
           <br />
-          {new Date(event.date).toLocaleString()}
+          {formattedDate}
         </p>
 
         <div className="card-actions">
