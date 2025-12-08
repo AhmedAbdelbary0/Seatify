@@ -1,12 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import EventCard from "./EventCard";
+import EventViewModal from "./EventViewModal";
+import AttendeesReport from "./AttendeesReport";
 import FilterIcon from "../assets/Filter.png";
+import api from "../api/axios";
 
-function EventList({ events }) {
+function EventList({ events, setEvents }) {
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+
+  const handleView = (event) => {
+    setSelectedEvent(event);
+    setShowViewModal(true);
+  };
+
+  const handleDelete = async (eventId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this event?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await api.delete(`/api/v1/events/${eventId}`);
+      setEvents((prev) => prev.filter((e) => e._id !== eventId));
+    } catch (err) {
+      console.error("Failed to delete event:", err);
+      alert("Failed to delete event. Please try again.");
+    }
+  };
+
   return (
     <section className="events">
       <div className="events-header">
         <h2>Your Events</h2>
+
         <div className="filters">
           <img src={FilterIcon} alt="Filter Icon" className="filter-icon" />
           <span className="filter-label">Filters</span>
@@ -18,17 +46,35 @@ function EventList({ events }) {
       <div className="event-cards">
         {events.length > 0 ? (
           events.map((event) => (
-            <div key={event._id} className="event-item">
-              <h3>{event.title}</h3>
-              <p>{event.description}</p>
-              <p>Date: {new Date(event.date).toLocaleDateString()}</p>
-              <p>Seats Available: {event.availableSeats}</p>
-            </div>
+            <EventCard
+              key={event._id}
+              event={event}
+              onView={() => handleView(event)}
+              onDelete={() => handleDelete(event._id)}
+            />
           ))
         ) : (
           <p>No events created yet.</p>
         )}
       </div>
+
+      {/* VIEW EVENT MODAL */}
+      <EventViewModal
+        isOpen={showViewModal}
+        event={selectedEvent}
+        onClose={() => setShowViewModal(false)}
+        onOpenAttendeesReport={() => {
+          setShowViewModal(false);
+          setShowReportModal(true);
+        }}
+      />
+
+      {/* ATTENDEES REPORT MODAL */}
+      <AttendeesReport
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        eventName={selectedEvent?.title}
+      />
     </section>
   );
 }

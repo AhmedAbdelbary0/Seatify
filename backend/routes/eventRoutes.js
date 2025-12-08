@@ -17,6 +17,12 @@ router.use(authenticate);
 // Create a new event
 router.post('/', eventController.createEvent); // TESTED ✅
 
+// Events the current user created
+router.get('/me/created/events', eventController.getMyCreatedEvents); // TESTED ✅
+
+// Events the current user joined
+router.get('/me/joined/events', participantController.getMyJoinedEvents); // TESTED ✅
+
 // Delete event (creator only) TESTED ✅
 router.delete(
   '/:eventId',
@@ -37,11 +43,5 @@ router.get(
   eventController.verifyOwnership,
   participantController.getParticipants
 );
-// Events the current user created
-
-router.get('/me/created/events', eventController.getMyCreatedEvents); // TESTED ✅
-// Events the current user joined
-
-router.get('/me/joined/events', participantController.getMyJoinedEvents); // TESTED ✅
 
 module.exports = router;

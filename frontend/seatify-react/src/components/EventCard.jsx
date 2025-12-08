@@ -1,45 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import "../styles/style.css";
-import EventViewModal from "./EventViewModal";
-import AttendeesReport from "./AttendeesReport";
 
-function EventCard() {
-  const [showModal, setShowModal] = useState(false);
-  const [showReport, setShowReport] = useState(false);
-
+function EventCard({ event, onView, onDelete }) {
   return (
     <>
       <div className="event-card">
-        <h3>Title</h3>
-        <p>Group Gather</p>
+        <h3>{event.title}</h3>
+        <p>{event.description || "No description provided"}</p>
+
         <p>
           <strong>Date & Time</strong>
           <br />
-          01/01/2026 3 pm
+          {new Date(event.date).toLocaleString()}
         </p>
+
         <div className="card-actions">
-          <button className="delete-btn">Delete</button>
-          <button className="view-btn" onClick={() => setShowModal(true)}>
+          <button className="delete-btn" onClick={onDelete}>
+            Delete
+          </button>
+          <button className="view-btn" onClick={onView}>
             View
           </button>
         </div>
       </div>
-
-      <EventViewModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onOpenAttendeesReport={() => {
-          // close event view and open attendees report
-          setShowModal(false);
-          setShowReport(true);
-        }}
-      />
-
-      <AttendeesReport
-        isOpen={showReport}
-        onClose={() => setShowReport(false)}
-        eventName="Title"
-      />
     </>
   );
 }

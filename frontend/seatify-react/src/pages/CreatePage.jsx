@@ -29,6 +29,17 @@ function CreatePage() {
     fetchCreatedEvents();
   }, []);
 
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      await api.delete(`/api/v1/events/${eventId}`);
+  
+      setCreatedEvents((prev) => prev.filter((e) => e._id !== eventId));
+    } catch (err) {
+      console.error("Delete failed", err);
+      alert("Failed to delete event. Try again.");
+    }
+  };
+
   return (
     <div className="create-page">
       <HeroSection
@@ -85,7 +96,10 @@ function CreatePage() {
         eventId={eventId}
       />
 
-      <EventList events={createdEvents} />
+      <EventList
+        events={createdEvents}
+        setEvents={setCreatedEvents}
+      />
       <Footer />
     </div>
   );
