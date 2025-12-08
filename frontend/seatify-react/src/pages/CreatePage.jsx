@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "../api/axios";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import EventList from "../components/EventList";
@@ -13,6 +14,20 @@ function CreatePage() {
   const [showSeatsModal, setShowSeatsModal] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [eventId, setEventId] = useState(null);
+  const [createdEvents, setCreatedEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchCreatedEvents = async () => {
+      try {
+        const response = await api.get("/api/v1/events/me/created/events");
+        setCreatedEvents(response.data.data.events);
+      } catch (err) {
+        console.error("Failed to fetch created events", err);
+      }
+    };
+
+    fetchCreatedEvents();
+  }, []);
 
   return (
     <div className="create-page">
@@ -53,7 +68,7 @@ function CreatePage() {
         eventId={eventId}
       />
 
-      <EventList />
+      <EventList events={createdEvents} />
       <Footer />
     </div>
   );

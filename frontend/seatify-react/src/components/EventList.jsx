@@ -2,7 +2,7 @@ import React from "react";
 import EventCard from "./EventCard";
 import FilterIcon from "../assets/Filter.png";
 
-function EventList() {
+function EventList({ events }) {
   return (
     <section className="events">
       <div className="events-header">
@@ -16,9 +16,18 @@ function EventList() {
       </div>
 
       <div className="event-cards">
-        {[1, 2, 3, 4].map((n) => (
-          <EventCard key={n} />
-        ))}
+        {events.length > 0 ? (
+          events.map((event) => (
+            <div key={event._id} className="event-item">
+              <h3>{event.title}</h3>
+              <p>{event.description}</p>
+              <p>Date: {new Date(event.date).toLocaleDateString()}</p>
+              <p>Seats Available: {event.availableSeats}</p>
+            </div>
+          ))
+        ) : (
+          <p>No events created yet.</p>
+        )}
       </div>
     </section>
   );

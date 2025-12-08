@@ -1,29 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/style.css";
+import api from "../api/axios";
 
 function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp, onForgotPassword }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   if (!isOpen) return null;
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post("/api/v1/auth/login", { email, password });
+      localStorage.setItem("accessToken", response.data.accessToken);
+      onSignIn();
+      onClose();
+    } catch (err) {
+      setError(err.response?.data?.message || "Sign-in failed. Please try again.");
+    }
+  };
 
   return (
     <div className="modal">
       <div className="modal-content">
         <h2>Sign In</h2>
         <p>Sign in to your account to continue</p>
-
-        <form
-          className="signin-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSignIn();
-            onClose();
-          }}
-        >
+        {error && <p className="error-message">{error}</p>}
+        <form className="signin-form" onSubmit={handleSignIn}>
           <label>Email</label>
-          <input type="email" placeholder="Enter your email" required />
-
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
           <label>Password</label>
-          <input type="password" placeholder="Enter your password" required />
-
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
           <a
             href="#"
             className="forgot-password"
@@ -34,7 +54,6 @@ function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp, onForgotPass
           >
             Forgot your password?
           </a>
-
           <div className="modal-actions">
             <button type="button" className="cancel-btn" onClick={onClose}>
               Cancel
@@ -43,7 +62,6 @@ function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp, onForgotPass
               Sign In
             </button>
           </div>
-
           <p className="signin-footer">
             Don’t have an account?{" "}
             <a

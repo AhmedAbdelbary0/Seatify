@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/style.css";
 import Ellipse3 from "../assets/Ellipse3.png";
 import Person from "../assets/person.png";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 import ResetPasswordModal from "./ResetPasswordModal";
+import api from "../api/axios";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,6 +13,28 @@ function Navbar() {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        await api.get("/api/v1/auth/status");
+        setIsSignedIn(true);
+      } catch {
+        setIsSignedIn(false);
+      }
+    };
+    checkAuthStatus();
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await api.get("/api/v1/auth/logout");
+      localStorage.removeItem("accessToken");
+      setIsSignedIn(false);
+    } catch (err) {
+      console.error("Sign-out failed", err);
+    }
+  };
 
   const handleOpenResetPassword = () => {
     setShowSignInModal(false);
@@ -46,22 +69,23 @@ function Navbar() {
               <div className="user-menu-container">
                 <div
                   className="user-icon"
-                  onClick={() => setMenuOpen((prev) => !prev)}                >
+                  onClick={() => setMenuOpen((prev) => !prev)}
+                >
                   <img src={Ellipse3} alt="user background" className="user-bg" />
                   <img src={Person} alt="user icon" className="user-img" />
                 </div>
                 {menuOpen && (
                   <div className="dropdown-menu">
-                  <a href="/bookings">My Bookings</a>
-                  <a href="mailto:hi@seatify.io">Help</a>
-                  <a
-                    href="#"
-                    className="signout"
-                    onClick={() => setIsSignedIn(false)}
-                  >
-                    Sign out
-                  </a>
-                </div>
+                    <a href="/bookings">My Bookings</a>
+                    <a href="mailto:hi@seatify.io">Help</a>
+                    <a
+                      href="#"
+                      className="signout"
+                      onClick={handleSignOut}
+                    >
+                      Sign out
+                    </a>
+                  </div>
                 )}
               </div>
             </>
@@ -107,10 +131,15 @@ function Navbar() {
           if (mode === "signin") {
             setShowSignUpModal(false);
             setShowSignInModal(true);
-          } else {
+          } else if (typeof mode === "object") {  
+            // mode contains res.data.user
             setIsSignedIn(true);
             setShowSignUpModal(false);
-          }
+        } else {
+            // fallback
+            setIsSignedIn(true);
+            setShowSignUpModal(false);
+        }
         }}
       />
     </>
