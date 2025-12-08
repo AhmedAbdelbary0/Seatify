@@ -44,10 +44,27 @@ function CreatePage() {
       <CreateEventModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        onContinue={() => {
-          setShowCreateModal(false);
-          setShowSeatsModal(true);
-          setEventId("EVT" + Math.floor(Math.random() * 100000)); // Mock event ID
+        onContinue={async (eventData) => {
+          try {
+            setShowCreateModal(false);
+        
+            const response = await api.post("/api/v1/events", {
+              title: eventData.title,
+              date: eventData.date,
+              maxSeatsPerPerson: eventData.seatLimit,   // FIXED NAME
+              totalSeats: 100,                          // TEMP — real value comes after layout
+              layout: []                                // TEMP — will fill after seat layout modal
+            });
+        
+            const newEventId = response.data.data.event._id;
+        
+            setEventId(newEventId);
+            setShowSeatsModal(true);
+        
+          } catch (err) {
+            console.error("Failed to create event:", err);
+            alert("Failed to create event. Please try again.");
+          }
         }}
       />
 

@@ -45,8 +45,10 @@ const sendTokens = (user, res, message) => {
   user.password = undefined;
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     message,
+    accessToken,
+    refreshToken,
     data: {
       user,
     },

@@ -16,7 +16,11 @@ function CreateEventModal({ isOpen, onClose, onContinue }) {
           className="create-event-form"
           onSubmit={(e) => {
             e.preventDefault();
-            onContinue();
+            onContinue({
+              title: e.target.eventTitle.value,
+              date: e.target.eventDate.value,
+              seatLimit: seatValue
+            });
           }}
         >
           <label htmlFor="eventTitle">Title</label>

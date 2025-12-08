@@ -28,7 +28,7 @@ api.interceptors.response.use(
       try {
         // Attempt to refresh token
         const refreshRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/v1/auth/refresh`,
+          `${process.env.REACT_APP_API_URL}/api/v1/auth/refreshToken`,
           { withCredentials: true }
         );
 
