@@ -12,14 +12,22 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
       const row = [];
       for (let c = 0; c < cols; c++) {
         row.push(
-          <div key={`${r}-${c}`} className="seat">
+          <div
+            key={`${r}-${c}`}
+            // use same seat classes as view modal
+            className="seat view-seat"
+          >
             {String.fromCharCode(65 + r)}
             {c + 1}
           </div>
         );
       }
       grid.push(
-        <div key={r} className="seat-row">
+        <div
+          key={r}
+          // use same row classes as view modal
+          className="seat-row view-seat-row"
+        >
           {row}
         </div>
       );
@@ -62,7 +70,8 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
             {/* Seat Grid */}
             <div
               id="seatGrid"
-              className="seat-grid"
+              // add view-seat-grid to match view modal wrapper
+              className="seat-grid view-seat-grid"
               style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
             >
               {generateGrid()}
