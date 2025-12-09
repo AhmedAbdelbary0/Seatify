@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import "../styles/style.css";
 import api from "../api/axios";
 
-function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp, onForgotPassword }) {
+function SignInModal({
+  isOpen,
+  onClose,
+  onSignIn,
+  onSwitchToSignUp,
+  onForgotPassword,
+  onSignInSuccess, // new optional callback
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,6 +21,10 @@ function SignInModal({ isOpen, onClose, onSignIn, onSwitchToSignUp, onForgotPass
     try {
       const response = await api.post("/api/v1/auth/login", { email, password });
       localStorage.setItem("accessToken", response.data.accessToken);
+      // notify parent about logged-in user, if provided
+      if (typeof onSignInSuccess === "function") {
+        onSignInSuccess(response.data.data?.user || null);
+      }
       onSignIn();
       onClose();
     } catch (err) {

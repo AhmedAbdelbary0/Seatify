@@ -1,66 +1,127 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "../styles/style.css";
 
-function ChooseSeatModal({ isOpen, onClose, onContinue }) {
+function ChooseSeatModal({ isOpen, onClose, onContinue, event }) {
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const rows = 5;
-  const cols = 8;
 
-  if (!isOpen) return null;
+  // 🔹 derive values even if modal isn't open yet (safe, just cheap calculations)
+  const maxSeatsPerPerson = event?.maxSeatsPerPerson || 1;
+  const layout = Array.isArray(event?.layout) ? event.layout : [];
 
-  // Example booked seats
-  const bookedSeats = ["B2", "D4", "C3"];
+  // 🔹 hook must be called unconditionally (no early return before this)
+  const bookedSeatNumbers = useMemo(() => {
+    // e.g. event.bookings?.flatMap(b => b.seats) || []
+    return []; // currently all seats treated as available
+  }, [event]);
 
-  const handleSeatClick = (seatId) => {
-    if (bookedSeats.includes(seatId)) return;
-    setSelectedSeats((prev) =>
-      prev.includes(seatId)
-        ? prev.filter((s) => s !== seatId)
-        : [...prev, seatId]
-    );
+  // compute grid dimensions from layout (same logic style as EventViewModal)
+  let maxRow = -1;
+  let maxColIndex = -1;
+  layout.forEach((seat) => {
+    const r = Number(seat.row);
+    if (Number.isNaN(r)) return;
+
+    const match =
+      typeof seat.seatNumber === "string"
+        ? seat.seatNumber.match(/([A-Z]+)(\d+)/i)
+        : null;
+    if (!match) return;
+
+    const colIndex = Number(match[2]) - 1;
+    if (!Number.isNaN(colIndex)) {
+      if (r > maxRow) maxRow = r;
+      if (colIndex > maxColIndex) maxColIndex = colIndex;
+    }
+  });
+
+  const numRows = maxRow + 1;
+  const numCols = maxColIndex + 1;
+
+  const handleSeatClick = (seatNumber) => {
+    if (bookedSeatNumbers.includes(seatNumber)) return;
+
+    setSelectedSeats((prev) => {
+      const already = prev.includes(seatNumber);
+      if (already) {
+        return prev.filter((s) => s !== seatNumber);
+      }
+      if (prev.length >= maxSeatsPerPerson) {
+        return prev;
+      }
+      return [...prev, seatNumber];
+    });
   };
 
-  // build grid as rows -> seats, to reuse same view layout CSS
   const seatGrid = [];
-  for (let r = 0; r < rows; r++) {
-    const rowSeats = [];
-    for (let c = 0; c < cols; c++) {
-      const seatId = `${String.fromCharCode(65 + r)}${c + 1}`;
-      const isBooked = bookedSeats.includes(seatId);
-      const isSelected = selectedSeats.includes(seatId);
+  if (numRows > 0 && numCols > 0) {
+    for (let r = 0; r < numRows; r++) {
+      const rowSeats = [];
+      for (let c = 0; c < numCols; c++) {
+        const seat = layout.find((s) => {
+          const row = Number(s.row);
+          if (row !== r) return false;
 
-      rowSeats.push(
-        <div
-          key={seatId}
-          className={`seat view-seat ${
-            isBooked
-              ? "seat-booked"
-              : isSelected
-              ? "seat-selected"
-              : "seat-available"
-          }`}
-          onClick={() => handleSeatClick(seatId)}
-        />
+          const m =
+            typeof s.seatNumber === "string"
+              ? s.seatNumber.match(/([A-Z]+)(\d+)/i)
+              : null;
+          if (!m) return false;
+
+          const colIndex = Number(m[2]) - 1;
+          return colIndex === c;
+        });
+
+        if (!seat) {
+          rowSeats.push(
+            <div key={`${r}-${c}`} className="seat view-seat seat-empty" />
+          );
+          continue;
+        }
+
+        const seatId = seat.seatNumber;
+        const isBooked = bookedSeatNumbers.includes(seatId);
+        const isSelected = selectedSeats.includes(seatId);
+
+        rowSeats.push(
+          <div
+            key={seatId}
+            className={`seat view-seat ${
+              isBooked
+                ? "seat-booked"
+                : isSelected
+                ? "seat-selected"
+                : "seat-available"
+            }`}
+            onClick={() => handleSeatClick(seatId)}
+          >
+            {seatId}
+          </div>
+        );
+      }
+      seatGrid.push(
+        <div key={r} className="seat-row view-seat-row">
+          {rowSeats}
+        </div>
       );
     }
-    seatGrid.push(
-      <div key={r} className="seat-row view-seat-row">
-        {rowSeats}
-      </div>
-    );
   }
+
+  if (!isOpen || !event) return null;
 
   return (
     <div className="modal">
-      {/* use same width/padding style as SeatsLayoutModal */}
       <div className="modal-content seats-layout">
         <h2>Choose Seat</h2>
-        <p>Choose your seat to continue</p>
+        <p>
+          Choose up to{" "}
+          <strong>{maxSeatsPerPerson}</strong> seat
+          {maxSeatsPerPerson > 1 ? "s" : ""} for{" "}
+          <strong>{event.title}</strong>
+        </p>
 
-        {/* match layout wrapper used by SeatsLayoutModal */}
         <div
           className="seat-grid view-seat-grid"
-          style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+          style={{ gridTemplateColumns: `repeat(${numCols}, 1fr)` }}
         >
           {seatGrid}
         </div>
@@ -97,8 +158,10 @@ function ChooseSeatModal({ isOpen, onClose, onContinue }) {
               if (typeof onContinue === "function") {
                 onContinue({
                   seats: selectedSeats,
-                  name: null,
-                  dateTime: null,
+                  eventId: event._id,
+                  eventTitle: event.title,
+                  eventDate: event.date,
+                  event, // full event for ConfirmBookingModal
                 });
               }
             }}

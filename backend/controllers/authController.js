@@ -211,13 +211,19 @@ exports.getStatus = asyncHandler(async (req, res, next) => {
     });
   }
 
+  // make status user shape match login user shape
+  const firstName = user.firstName || '';
+  const lastName = user.lastName || '';
+
   res.status(200).json({
     status: 'success',
     authenticated: true,
     user: {
-      id: user._id,
-      firstName: user.firstName,
-      email: user.email
+      id: user._id.toString(),  // same id the frontend expects
+      firstName,
+      lastName,                 // <-- this is what was missing in your JSON
+      email: user.email,
+      fullName: [firstName, lastName].filter(Boolean).join(' '), // optional
     }
   });
 });

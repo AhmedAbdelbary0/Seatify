@@ -10,6 +10,7 @@ import api from "../api/axios";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState(null); // store logged-in user
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
@@ -17,10 +18,18 @@ function Navbar() {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        await api.get("/api/v1/auth/status");
-        setIsSignedIn(true);
+        const res = await api.get("/api/v1/auth/status");
+        const backendUser = res.data?.user || null;
+        if (res.data?.authenticated && backendUser) {
+          setIsSignedIn(true);
+          setUser(backendUser);
+        } else {
+          setIsSignedIn(false);
+          setUser(null);
+        }
       } catch {
         setIsSignedIn(false);
+        setUser(null);
       }
     };
     checkAuthStatus();
@@ -31,6 +40,7 @@ function Navbar() {
       await api.get("/api/v1/auth/logout");
       localStorage.removeItem("accessToken");
       setIsSignedIn(false);
+      setUser(null);
     } catch (err) {
       console.error("Sign-out failed", err);
     }
@@ -40,6 +50,12 @@ function Navbar() {
     setShowSignInModal(false);
     setShowResetPasswordModal(true);
   };
+
+  const firstName = user && typeof user === "object" ? user.firstName : undefined;
+  const fullName =
+    user && (user.firstName || user.lastName)
+      ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+      : null;
 
   return (
     <>
@@ -63,8 +79,12 @@ function Navbar() {
         </div>
 
         <div className="nav-right">
-          {isSignedIn ? (
+          {isSignedIn && firstName !== undefined ? (
             <>
+              {/* greeting */}
+              <span className="nav-greeting">
+                Hi{fullName ? `, ${fullName}` : ""}!
+              </span>
               <a href="/create" className="create-btn">Create</a>
               <div className="user-menu-container">
                 <div
@@ -112,6 +132,10 @@ function Navbar() {
           setIsSignedIn(true);
           setShowSignInModal(false);
         }}
+        onSignInSuccess={(loggedInUser) => {
+          // store user from /login response
+          if (loggedInUser && typeof loggedInUser === "object") setUser(loggedInUser);
+        }}
         onSwitchToSignUp={() => {
           setShowSignInModal(false);
           setShowSignUpModal(true);
@@ -131,15 +155,16 @@ function Navbar() {
           if (mode === "signin") {
             setShowSignUpModal(false);
             setShowSignInModal(true);
-          } else if (typeof mode === "object") {  
-            // mode contains res.data.user
+          } else if (mode && typeof mode === "object") {
+            // mode contains res.data.user from signup
             setIsSignedIn(true);
+            setUser(mode); // store user
             setShowSignUpModal(false);
-        } else {
+          } else {
             // fallback
             setIsSignedIn(true);
             setShowSignUpModal(false);
-        }
+          }
         }}
       />
     </>

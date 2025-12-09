@@ -7,7 +7,7 @@ import FindEventModal from "../components/FindEventModal";
 import ChooseSeatModal from "../components/ChooseSeatModal";
 import ConfirmBookingModal from "../components/ConfirmBookingModal";
 import FaqSection from "../components/FaqSection";
-import api from "../api/axios"; // <-- add
+import api from "../api/axios";
 
 import "../styles/style.css";
 
@@ -16,9 +16,10 @@ function HomePage() {
   const [showChooseSeatModal, setShowChooseSeatModal] = useState(false);
   const [showConfirmBookingModal, setShowConfirmBookingModal] = useState(false);
   const [bookingDetails, setBookingDetails] = useState(null);
-  const [findEventError, setFindEventError] = useState(null); // optional: error to pass to modal
+  const [findEventError, setFindEventError] = useState(null);
 
   const handleChooseContinue = (details) => {
+    // details comes from ChooseSeatModal: { seats, eventId, eventTitle, eventDate, event }
     setBookingDetails((prev) => ({
       ...prev,
       ...details,
@@ -33,12 +34,12 @@ function HomePage() {
       const res = await api.get(`/api/v1/events/${eventId}`);
       const foundEvent = res.data.data.event;
 
-      // preload bookingDetails with event info
       setBookingDetails({
         eventId: foundEvent._id,
         eventTitle: foundEvent.title,
         eventDate: foundEvent.date,
-        event: foundEvent,
+        event: foundEvent, // important: full event object for ConfirmBookingModal
+        seats: [],         // initialize seats so shape is consistent
       });
 
       setShowFindEventModal(false);
@@ -55,6 +56,7 @@ function HomePage() {
 
   return (
     <div className="home-page">
+      {/* You may want Navbar here too, but keeping your existing structure */}
       <HeroSection
         title="Manage Your Seats"
         highlight=" Smartly!"
@@ -74,7 +76,6 @@ function HomePage() {
       <FindEventModal
         isOpen={showFindEventModal}
         onClose={() => setShowFindEventModal(false)}
-        // 🔹 pass handler and optional error
         onContinue={handleFindEventContinue}
         error={findEventError}
       />
@@ -83,15 +84,22 @@ function HomePage() {
         isOpen={showChooseSeatModal}
         onClose={() => setShowChooseSeatModal(false)}
         onContinue={handleChooseContinue}
-        // optionally pass found event down:
-        event={bookingDetails?.event}
+        event={bookingDetails?.event} // pass full event down
       />
 
       <ConfirmBookingModal
         isOpen={showConfirmBookingModal}
-        onClose={() => setShowConfirmBookingModal(false)}
-        bookingDetails={bookingDetails}
-        onConfirm={() => {
+        onClose={() => {
+          setShowConfirmBookingModal(false);
+          // optionally clear after closing
+          // setBookingDetails(null);
+        }}
+        // 🔹 pass the exact props ConfirmBookingModal expects
+        seats={bookingDetails?.seats}
+        event={bookingDetails?.event}
+        onConfirm={({ user, event, seats }) => {
+          // TODO: call backend to create booking
+          // e.g. api.post(`/api/v1/events/${event._id}/bookings`, { seats })
           setShowConfirmBookingModal(false);
           setBookingDetails(null);
         }}
