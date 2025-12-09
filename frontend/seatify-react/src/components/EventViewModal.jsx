@@ -84,9 +84,24 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
           return colIndex === c;
         });
 
+        if (!seat) {
+          rowSeats.push(
+            <div key={`${r}-${c}`} className="seat view-seat seat-empty" />
+          );
+          continue;
+        }
+
+        const seatId = seat.seatNumber;
+        const isBooked = seat.status === "booked";
+
         rowSeats.push(
-          <div key={`${r}-${c}`} className="seat view-seat">
-            {seat ? seat.seatNumber : ""}
+          <div
+            key={seatId}
+            className={`seat view-seat ${
+              isBooked ? "seat-booked" : "seat-available"
+            }`}
+          >
+            {seatId}
           </div>
         );
       }
@@ -97,6 +112,12 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
       );
     }
   }
+
+  const qrValue =
+    event.joinUrl ||
+    `${window.location.origin}/join/${event._id}`;
+
+  const eventIdLabel = event._id;
 
   return (
     <div className="modal">
@@ -194,7 +215,7 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
 
             <div className="qr-container">
               <QRCodeCanvas
-                value="https://localhost:3000/event/EVT12345"
+                value={qrValue}
                 size={180}
                 bgColor="#ffffff"
                 fgColor="#5B21B6"
@@ -203,7 +224,7 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
               />
             </div>
 
-            <p className="event-id-text">Event ID: <strong>EVT12345</strong></p>
+            <p className="event-id-text">Event ID: <strong>{eventIdLabel}</strong></p>
             <div className="modal-actions">
               <button className="cancel-btn" onClick={() => setActiveTab("details")}>
                 Back
@@ -211,10 +232,11 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
               <button
                 className="continue-btn"
                 onClick={() => {
-                  const canvas = document.querySelector("canvas");
+                  const canvas = document.querySelector(".event-qrcode canvas");
+                  if (!canvas) return;
                   const link = document.createElement("a");
                   link.href = canvas.toDataURL("image/png");
-                  link.download = `Seatify_EVT12345.png`;
+                  link.download = `Seatify_${eventIdLabel}.png`;
                   link.click();
                 }}
               >

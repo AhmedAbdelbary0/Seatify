@@ -168,3 +168,28 @@ exports.verifyOwnership = asyncHandler(async (req, res, next) => {
   req.event = event; // pass event through
   next();
 });
+
+// GET JOIN INFO (PUBLIC) – minimal data for /join/:eventId flow
+exports.getJoinInfo = asyncHandler(async (req, res, next) => {
+  const event = await Event.findById(req.params.eventId);
+
+  if (!event) return next(new AppError('Event not found', 404));
+
+  const bookedSeats = Array.isArray(event.layout)
+    ? event.layout
+        .filter((s) => s.status === 'booked')
+        .map((s) => s.seatNumber)
+    : [];
+
+  // we don't need QR image here, only join URL if frontend wants it
+  const joinUrl = `${process.env.CLIENT_URL}/join/${event._id}`;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      event,
+      joinUrl,
+      bookedSeats,
+    },
+  });
+});
