@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-  withCredentials: true, // allows cookies (refresh tokens)
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:3000",
+  withCredentials: true, // 🔹 send cookies (accessToken, refreshToken) on every request
 });
 
 // Attach access token automatically

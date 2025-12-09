@@ -8,7 +8,7 @@ function SignInModal({
   onSignIn,
   onSwitchToSignUp,
   onForgotPassword,
-  onSignInSuccess, // new optional callback
+  onSignInSuccess, // optional
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,16 +19,27 @@ function SignInModal({
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
+      setError("");
+      // 🔹 FIX: include /api/v1 prefix
       const response = await api.post("/api/v1/auth/login", { email, password });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      // notify parent about logged-in user, if provided
+      // cookies are set by backend; accessToken in body is optional now
+
+      const user = response.data?.data?.user || null;
+
+      // 🔹 prefer onSignInSuccess if provided (HomePage uses this)
       if (typeof onSignInSuccess === "function") {
-        onSignInSuccess(response.data.data?.user || null);
+        await onSignInSuccess(user);
+      } else if (typeof onSignIn === "function") {
+        // fallback for Navbar usage
+        await onSignIn(user);
       }
-      onSignIn();
-      onClose();
+
+      // only close if parent didn't already close it
+      if (typeof onClose === "function") onClose();
     } catch (err) {
-      setError(err.response?.data?.message || "Sign-in failed. Please try again.");
+      setError(
+        err.response?.data?.message || "Sign-in failed. Please try again."
+      );
     }
   };
 

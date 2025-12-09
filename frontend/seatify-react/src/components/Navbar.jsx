@@ -16,9 +16,12 @@ function Navbar() {
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
     const checkAuthStatus = async () => {
       try {
-        const res = await api.get("/api/v1/auth/status");
+        const res = await api.get("/api/v1/auth/status"); // baseURL + /api/v1/auth/status
+        if (!mounted) return;
         const backendUser = res.data?.user || null;
         if (res.data?.authenticated && backendUser) {
           setIsSignedIn(true);
@@ -28,11 +31,25 @@ function Navbar() {
           setUser(null);
         }
       } catch {
+        if (!mounted) return;
         setIsSignedIn(false);
         setUser(null);
       }
     };
+
+    // initial load
     checkAuthStatus();
+
+    // 🔹 listen to global auth changes (login/logout from anywhere)
+    const handleAuthChanged = () => {
+      checkAuthStatus();
+    };
+    window.addEventListener("auth:changed", handleAuthChanged);
+
+    return () => {
+      mounted = false;
+      window.removeEventListener("auth:changed", handleAuthChanged);
+    };
   }, []);
 
   const handleSignOut = async () => {
@@ -41,6 +58,8 @@ function Navbar() {
       localStorage.removeItem("accessToken");
       setIsSignedIn(false);
       setUser(null);
+      // 🔹 notify rest of app
+      window.dispatchEvent(new Event("auth:changed"));
     } catch (err) {
       console.error("Sign-out failed", err);
     }
@@ -141,10 +160,14 @@ function Navbar() {
         onSignIn={() => {
           setIsSignedIn(true);
           setShowSignInModal(false);
+          // 🔹 notify rest of app (e.g. HomePage) that auth changed
+          window.dispatchEvent(new Event("auth:changed"));
         }}
         onSignInSuccess={(loggedInUser) => {
           // store user from /login response
           if (loggedInUser && typeof loggedInUser === "object") setUser(loggedInUser);
+          // also ensure global listeners re-check status
+          window.dispatchEvent(new Event("auth:changed"));
         }}
         onSwitchToSignUp={() => {
           setShowSignInModal(false);
@@ -170,10 +193,12 @@ function Navbar() {
             setIsSignedIn(true);
             setUser(mode); // store user
             setShowSignUpModal(false);
+            window.dispatchEvent(new Event("auth:changed"));
           } else {
             // fallback
             setIsSignedIn(true);
             setShowSignUpModal(false);
+            window.dispatchEvent(new Event("auth:changed"));
           }
         }}
       />

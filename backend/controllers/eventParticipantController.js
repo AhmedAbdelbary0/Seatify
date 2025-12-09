@@ -91,13 +91,20 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
     await session.commitTransaction();
     session.endSession();
 
+    // 🔹 re-fetch participant populated for frontend convenience
+    const populatedParticipant = await EventParticipant.findOne({
+      eventId,
+      userId: req.user._id,
+    }).populate({
+      path: 'eventId',
+      select: 'title date',
+    });
+
     res.status(200).json({
       status: 'success',
       message: 'Seats booked successfully!',
       data: {
-        bookedSeats: seats,
-        totalSeatsBooked: participant.seatsBooked,
-        event,
+        participant: populatedParticipant,
       },
     });
   } catch (err) {
@@ -202,7 +209,10 @@ exports.getParticipants = asyncHandler(async (req, res, next) => {
 // GET EVENTS THE USER JOINED
 
 exports.getMyJoinedEvents = asyncHandler(async (req, res) => {
-  const joined = await EventParticipant.findByUser(req.user._id);
+  const joined = await EventParticipant.findByUser(req.user._id).populate({
+    path: 'eventId',
+    select: 'title date',
+  });
 
   res.status(200).json({
     status: 'success',
