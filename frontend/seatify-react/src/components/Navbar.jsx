@@ -60,6 +60,10 @@ function Navbar() {
       setUser(null);
       // 🔹 notify rest of app
       window.dispatchEvent(new Event("auth:changed"));
+      // 🔹 redirect to home page from any route
+      if (window.location.pathname !== "/") {
+        window.location.href = "/";
+      }
     } catch (err) {
       console.error("Sign-out failed", err);
     }

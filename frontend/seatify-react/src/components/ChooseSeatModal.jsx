@@ -8,10 +8,23 @@ function ChooseSeatModal({ isOpen, onClose, onContinue, event }) {
   const maxSeatsPerPerson = event?.maxSeatsPerPerson || 1;
   const layout = Array.isArray(event?.layout) ? event.layout : [];
 
-  // 🔹 hook must be called unconditionally (no early return before this)
+  // 🔹 derive booked seats from event.layout (and fallback to event.bookedSeats if provided)
   const bookedSeatNumbers = useMemo(() => {
-    // e.g. event.bookings?.flatMap(b => b.seats) || []
-    return []; // currently all seats treated as available
+    if (!event) return [];
+
+    // Prefer layout.status if present
+    const fromLayout = Array.isArray(event.layout)
+      ? event.layout
+          .filter((s) => s.status === "booked")
+          .map((s) => s.seatNumber)
+      : [];
+
+    // Optional: merge with backend helper field from getEventById
+    const fromEventField = Array.isArray(event.bookedSeats)
+      ? event.bookedSeats
+      : [];
+
+    return Array.from(new Set([...fromLayout, ...fromEventField]));
   }, [event]);
 
   // compute grid dimensions from layout (same logic style as EventViewModal)

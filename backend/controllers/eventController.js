@@ -104,12 +104,21 @@ exports.getEventById = asyncHandler(async (req, res, next) => {
   // Generate QR ...
   const qr = await generateEventQRCode(event._id);
 
+  // derive booked seats from layout for convenience
+  const bookedSeats =
+    Array.isArray(event.layout)
+      ? event.layout
+          .filter((s) => s.status === 'booked')
+          .map((s) => s.seatNumber)
+      : [];
+
   res.status(200).json({
     status: 'success',
     data: {
       event,
       qrCode: qr.qrCode,
       joinUrl: qr.joinUrl,
+      bookedSeats, // <-- new helper field
     },
   });
 });
