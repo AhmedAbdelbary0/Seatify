@@ -42,53 +42,75 @@ function ConfirmBookingModal({
 
   if (!isOpen) return null;
 
-  // ensure we have event and seats
+  // helper: same as in Navbar
+  const formatName = (str) =>
+    typeof str === "string"
+      ? str
+          .trim()
+          .split(/\s+/)
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ")
+      : "";
+
+  // 🔹 helper: match EventViewModal date formatting (en-GB + same options)
+  const formatEventDateTime = (ev) => {
+    if (!ev || !ev.date) return "N/A";
+
+    const d = new Date(ev.date);
+    if (Number.isNaN(d.getTime())) return "N/A";
+
+    return d.toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
+
   const seatsList = Array.isArray(seats) ? seats : [];
-  const hasEvent = !!event;
+  const formattedDateTime = formatEventDateTime(event);
 
-  const dateTime =
-    event?.date ||
-    event?.dateTime ||
-    event?.startTime ||
-    null;
-
-  // same strategy as Navbar: derive fullName from user object
-  const firstName =
-    user && typeof user === "object" ? user.firstName : undefined;
-
+  const firstName = user && typeof user === "object" ? user.firstName : undefined;
   const fullNameFromFields =
     user && (user.firstName || user.lastName)
-      ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+      ? `${formatName(user.firstName || "")} ${formatName(
+          user.lastName || ""
+        )}`.trim()
       : null;
-
-  const fullName = (user && user.fullName) || fullNameFromFields;
+  const fullName = fullNameFromFields || formatName(firstName) || "Guest";
 
   const disableBook =
-    loadingUser || !!loadError || !hasEvent || seatsList.length === 0;
+    loadingUser ||
+    !!loadError ||
+    !event ||
+    seatsList.length === 0;
 
   return (
     <div className="modal">
-      <div className="modal-content">
+      <div className="modal-content confirm-booking">
         <h2>Confirm Booking</h2>
-        <p>Review all details and confirm your booking</p>
 
-        {loadingUser && <p>Loading user details...</p>}
+        {loadingUser && <p>Loading your details...</p>}
         {loadError && <p className="error-message">{loadError}</p>}
-        {!hasEvent && (
-          <p className="error-message">Missing event details for booking.</p>
-        )}
 
-        {hasEvent && !loadError && (
-          <div className="confirm-details">
+        {!loadingUser && !loadError && (
+          <div className="booking-details">
+            <div className="detail-item">
+              <label>Event</label>
+              <p>{event?.title || "N/A"}</p>
+            </div>
+
             <div className="detail-item">
               <label>Date &amp; Time</label>
-              <p>{dateTime || "N/A"}</p>
+              {/* 🔹 date format now matches EventViewModal */}
+              <p>{formattedDateTime}</p>
             </div>
 
             <div className="detail-item">
               <label>Name</label>
-              {/* if for some reason fullName is falsy, fall back to firstName, then "Guest" */}
-              <p>{fullName || firstName || "Guest"}</p>
+              <p>{fullName}</p>
             </div>
 
             <div className="detail-item">

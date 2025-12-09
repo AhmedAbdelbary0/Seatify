@@ -51,10 +51,20 @@ function Navbar() {
     setShowResetPasswordModal(true);
   };
 
+  // helper: capitalize first letter of each word
+  const formatName = (str) =>
+    typeof str === "string"
+      ? str
+          .trim()
+          .split(/\s+/)
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(" ")
+      : "";
+
   const firstName = user && typeof user === "object" ? user.firstName : undefined;
   const fullName =
     user && (user.firstName || user.lastName)
-      ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+      ? `${formatName(user.firstName || "")} ${formatName(user.lastName || "")}`.trim()
       : null;
 
   return (
