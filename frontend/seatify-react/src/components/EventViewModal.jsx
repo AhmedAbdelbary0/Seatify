@@ -165,13 +165,9 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
               </button>
               <button
                 className="continue-btn"
-                onClick={() => {
-                  if (typeof onOpenAttendeesReport === "function") {
-                    onOpenAttendeesReport();
-                  }
-                }}
+                onClick={() => setActiveTab("seats")}
               >
-                Attendees Report
+                Continue
               </button>
             </div>
           </div>
