@@ -11,7 +11,7 @@ function MyBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cancelingId, setCancelingId] = useState(null);
-  const [cancelError, setCancelError] = useState(""); // <--- new
+  const [cancelError, setCancelError] = useState(""); 
 
   useEffect(() => {
     let mounted = true;
@@ -19,7 +19,7 @@ function MyBookingsPage() {
       try {
         setLoading(true);
         setError(null);
-        setCancelError(""); // clear any previous cancel error
+        setCancelError("");
         const res = await api.get("/api/v1/events/me/joined/events");
         if (!mounted) return;
         const list = res.data?.data?.joined || [];
@@ -49,7 +49,7 @@ function MyBookingsPage() {
     if (!eventId) return;
 
     try {
-      setCancelError(""); // clear previous cancel error
+      setCancelError("");
       setCancelingId(participant._id);
       await api.delete(`/api/v1/events/${eventId}/leave`);
       setJoinedBookings((prev) =>
@@ -61,7 +61,6 @@ function MyBookingsPage() {
       const backendMsg =
         err.response?.data?.message || err.message || "Failed to cancel booking.";
 
-      // show the specific creator error nicely
       if (
         backendMsg.includes(
           "The event creator cannot leave their event"
