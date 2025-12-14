@@ -58,11 +58,41 @@ const sendTokens = (user, res, message) => {
 exports.register = asyncHandler(async (req, res, next) => {
   const { firstName, lastName, email, password, role } = req.body;
 
-  if (!firstName || !lastName || !email || !password)
-    throw new AppError('Please provide all required fields.', 400);
+  // collect field-specific errors
+  const fieldErrors = {};
+
+  if (!firstName || !firstName.trim()) {
+    fieldErrors.firstName = 'First name is required.';
+  }
+  if (!lastName || !lastName.trim()) {
+    fieldErrors.lastName = 'Last name is required.';
+  }
+  if (!email || !email.trim()) {
+    fieldErrors.email = 'Email is required.';
+  }
+  if (!password) {
+    fieldErrors.password = 'Password is required.';
+  } else if (password.length < 8) {
+    fieldErrors.password = 'Password must be at least 8 characters.';
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
+    // 422 Unprocessable Entity with field-level errors
+    return res.status(422).json({
+      status: 'fail',
+      message: 'Validation error.',
+      errors: fieldErrors,
+    });
+  }
 
   const existingUser = await User.findOne({ email });
-  if (existingUser) throw new AppError('Email already registered.', 400);
+  if (existingUser) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Email already registered.',
+      errors: { email: 'Email already registered.' },
+    });
+  }
 
   const user = await User.create({
     firstName,

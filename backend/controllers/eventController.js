@@ -188,3 +188,24 @@ exports.getJoinInfo = asyncHandler(async (req, res, next) => {
     },
   });
 });
+
+// LEAVE EVENT
+
+exports.leaveEvent = asyncHandler(async (req, res, next) => {
+  const { eventId } = req.params;
+  const userId = req.user._id;
+
+  const event = await Event.findById(eventId);
+  if (!event) return next(new AppError('Event not found', 404));
+
+  if (event.creatorId.toString() === userId.toString()) {
+    // this exact message is what the frontend looks for
+    return next(
+      new AppError('The event creator cannot leave their event.', 400)
+    );
+  }
+
+  // ...existing leave logic (remove participant, update seats, etc.)...
+
+  res.status(204).json({ status: 'success', data: null });
+});
