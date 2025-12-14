@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/style.css";
-import FilterIcon from "../assets/Filter.png";
 import api from "../api/axios";
 
 function MyBookingsPage() {
   const [joinedBookings, setJoinedBookings] = useState([]);
-  const [activeFilter, setActiveFilter] = useState("active");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cancelingId, setCancelingId] = useState(null);
@@ -38,7 +36,7 @@ function MyBookingsPage() {
     };
   }, []);
 
-  const filtered = activeFilter === "active" ? joinedBookings : [];
+  const filtered = joinedBookings;
 
   const handleCancelBooking = async (participant) => {
     const eventId =
@@ -83,27 +81,6 @@ function MyBookingsPage() {
       <section className="bookings-section">
         <h1 className="bookings-title">Your Bookings</h1>
 
-        <div className="filters">
-          <img src={FilterIcon} alt="Filter icon" className="filter-icon" />
-          <span className="filter-label">Filters</span>
-          <button
-            className={`filter-btn ${
-              activeFilter === "active" ? "active" : ""
-            }`}
-            onClick={() => setActiveFilter("active")}
-          >
-            Active
-          </button>
-          <button
-            className={`filter-btn ${
-              activeFilter === "canceled" ? "active" : ""
-            }`}
-            onClick={() => setActiveFilter("canceled")}
-          >
-            Canceled
-          </button>
-        </div>
-
         {cancelError && (
           <p className="error-text" style={{ marginTop: "8px" }}>
             {cancelError}
@@ -113,12 +90,7 @@ function MyBookingsPage() {
         {loading && <p>Loading bookings...</p>}
         {error && <p className="error-text">{error}</p>}
         {!loading && !error && filtered.length === 0 && (
-          <p>
-            No{" "}
-            {activeFilter === "active"
-              ? "active bookings yet."
-              : "canceled bookings."}
-          </p>
+          <p>No bookings yet.</p>
         )}
 
         <div className="booking-list">
