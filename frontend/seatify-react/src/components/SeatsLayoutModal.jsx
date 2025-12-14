@@ -43,12 +43,10 @@ function SeatsLayoutModal({ isOpen, onClose, onSave }) {
       const rowLabel = String.fromCharCode(65 + r); // A, B, C...
       for (let c = 0; c < cols; c++) {
         const seatNumber = `${rowLabel}${c + 1}`;
-        // 🔹 match backend schema: seat objects with seatNumber
         layout.push({
           seatNumber,
           row: r,
           col: c,
-          // status: 'available', // if your schema has other fields, add them here
         });
       }
     }

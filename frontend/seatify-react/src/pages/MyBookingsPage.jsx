@@ -49,13 +49,11 @@ function MyBookingsPage() {
     try {
       setCancelingId(participant._id);
       await api.delete(`/api/v1/events/${eventId}/leave`);
-      // remove from local state
       setJoinedBookings((prev) =>
         prev.filter((p) => p._id !== participant._id)
       );
     } catch (err) {
       console.error("Failed to cancel booking:", err);
-      // optional: setError("Failed to cancel booking.");
     } finally {
       setCancelingId(null);
     }

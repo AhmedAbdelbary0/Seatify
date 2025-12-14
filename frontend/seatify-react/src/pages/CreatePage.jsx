@@ -15,7 +15,7 @@ function CreatePage() {
   const [showQRModal, setShowQRModal] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [createdEvents, setCreatedEvents] = useState([]);
-  const [pendingEventData, setPendingEventData] = useState(null); // 🔹 temp storage
+  const [pendingEventData, setPendingEventData] = useState(null);
 
   useEffect(() => {
     const fetchCreatedEvents = async () => {
@@ -57,7 +57,6 @@ function CreatePage() {
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onContinue={async (eventData) => {
-          // 🔹 just store data & open seats modal; no API call yet
           setShowCreateModal(false);
           setPendingEventData(eventData);
           setShowSeatsModal(true);
@@ -69,30 +68,28 @@ function CreatePage() {
         isOpen={showSeatsModal}
         onClose={() => {
           setShowSeatsModal(false);
-          setPendingEventData(null); // reset if user backs out
+          setPendingEventData(null);
         }}
         onSave={async ({ layout, totalSeats }) => {
           try {
             if (!pendingEventData) return;
 
-            // 🔹 Now we have everything: title, date, maxSeatsPerPerson, totalSeats, layout
             const response = await api.post("/api/v1/events", {
               title: pendingEventData.title,
               date: pendingEventData.date,
               maxSeatsPerPerson: pendingEventData.seatLimit,
               totalSeats,
-              layout, // 🔹 now an array of seat objects
+              layout, 
             });
 
             const createdEvent = response.data.data.event;
-            console.log("Created event from API:", createdEvent); // 🔍 check layout here
+            console.log("Created event from API:", createdEvent); 
 
             const newEventId = createdEvent._id;
 
             setCreatedEvents((prev) => [...prev, createdEvent]);
             setEventId(newEventId);
 
-            // clear temp + move to QR modal
             setPendingEventData(null);
             setShowSeatsModal(false);
             setShowQRModal(true);

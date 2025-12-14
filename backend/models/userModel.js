@@ -35,7 +35,6 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     role: {
-      // Im not sure that we still need this
       type: String,
       enum: ['user', 'admin'],
       default: 'user',

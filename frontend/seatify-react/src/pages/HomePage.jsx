@@ -8,7 +8,7 @@ import ChooseSeatModal from "../components/ChooseSeatModal";
 import ConfirmBookingModal from "../components/ConfirmBookingModal";
 import FaqSection from "../components/FaqSection";
 import api from "../api/axios";
-import SignInModal from "../components/SignInModal"; // <-- add import
+import SignInModal from "../components/SignInModal"; 
 
 import "../styles/style.css";
 
@@ -19,7 +19,6 @@ function HomePage() {
   const [bookingDetails, setBookingDetails] = useState(null);
   const [findEventError, setFindEventError] = useState(null);
 
-  // 🔹 auth state for gating create/booking flow
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [authUser, setAuthUser] = useState(null);
   const [showSignInModal, setShowSignInModal] = useState(false);
@@ -48,7 +47,6 @@ function HomePage() {
     // initial check on mount
     checkStatus();
 
-    // 🔹 listen for global auth changes (login/logout from Navbar)
     const handleAuthChanged = () => {
       checkStatus();
     };
@@ -61,7 +59,6 @@ function HomePage() {
   }, []);
 
   const handleChooseContinue = (details) => {
-    // details contains { seats, eventId, eventTitle, eventDate, event }
     setBookingDetails((prev) => ({
       ...prev,
       ...details,
@@ -96,15 +93,12 @@ function HomePage() {
     }
   };
 
-  // 🔹 gated handler for main CTA
   const handleHeroButtonClick = () => {
     setFindEventError(null);
     if (!isSignedIn) {
-      // 🔹 only show SignIn when not signed in
       setShowSignInModal(true);
       return;
     }
-    // 🔹 already signed in → open find-event flow
     setShowFindEventModal(true);
   };
 
@@ -116,32 +110,27 @@ function HomePage() {
         subtitle="Build layouts, share QR code, and manage bookings. Seatify makes seats booking faster and smarter."
         buttonText="See It in Action"
         tagText="Totally Free Experience"
-        onButtonClick={handleHeroButtonClick} // <-- use gated handler
+        onButtonClick={handleHeroButtonClick} 
       />
 
       <WhySeatify />
       <FaqSection />
       <Footer />
 
-      {/* 🔹 Sign-In Modal used specifically for gating create/booking flow */}
       <SignInModal
         isOpen={showSignInModal}
         onClose={() => setShowSignInModal(false)}
         onSignIn={() => {
-          // no-op; HomePage uses onSignInSuccess
         }}
         onSignInSuccess={(loggedInUser) => {
           setIsSignedIn(true);
           setAuthUser(loggedInUser || null);
           setShowSignInModal(false);
-          // 🔹 after successful login, immediately open FindEventModal
           setShowFindEventModal(true);
         }}
         onSwitchToSignUp={() => {
-          // optional: you can add a dedicated SignUpModal for HomePage if desired
         }}
         onForgotPassword={() => {
-          // optional for HomePage; can be a no-op or navigate
         }}
       />
 
@@ -167,15 +156,12 @@ function HomePage() {
         seats={bookingDetails?.seats}
         event={bookingDetails?.event}
         onConfirm={async ({ user, event, seats }) => {
-          // 🔹 call backend join route with exactly the seats user selected
           try {
             await api.post(`/api/v1/events/${event._id}/join`, {
               seats: seats || bookingDetails?.seats || [],
             });
-            // optionally show toast / redirect to MyBookingsPage
           } catch (err) {
             console.error("Booking failed:", err);
-            // optionally surface error in ConfirmBookingModal
           } finally {
             setShowConfirmBookingModal(false);
             setBookingDetails(null);

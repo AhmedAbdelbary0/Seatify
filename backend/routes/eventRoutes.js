@@ -11,7 +11,6 @@ const { authenticate } = require('../utils/auth');
 // Get a single event (QR included)
 router.get('/:eventId', eventController.getEventById); // TESTED ✅
 
-// 🔹 Public join-info route used by /join/:eventId page
 router.get('/:eventId/join-info', eventController.getJoinInfo);
 
 // PROTECTED ROUTES (NEED LOGIN)
@@ -28,12 +27,6 @@ router.get('/me/created/events', eventController.getMyCreatedEvents); // TESTED 
 // Events the current user joined
 router.get('/me/joined/events', participantController.getMyJoinedEvents); // TESTED ✅
 
-// 🔹 Update event (layout / totalSeats etc.)
-// router.patch(
-//   '/:eventId',
-//   eventController.verifyOwnership,
-//   eventController.updateEvent
-// );
 
 // Delete event (creator only) TESTED ✅
 router.delete(

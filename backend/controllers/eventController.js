@@ -31,7 +31,6 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
   const { title, description, date, maxSeatsPerPerson, totalSeats, layout } =
     req.body;
 
-  // now we expect totalSeats again
   if (!title || !date || !maxSeatsPerPerson || !totalSeats) {
     return next(new AppError('Missing required fields', 400));
   }
@@ -62,13 +61,12 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
     status: 'success',
     data: {
       event,
-      qrCode: qr.qrCode, // Base64 PNG
+      qrCode: qr.qrCode,
       joinUrl: qr.joinUrl,
     },
   });
 });
 
-// 🔹 UPDATE EVENT (layout / totalSeats)
 exports.updateEvent = asyncHandler(async (req, res, next) => {
   const { layout, totalSeats } = req.body;
 
@@ -81,7 +79,7 @@ exports.updateEvent = asyncHandler(async (req, res, next) => {
     {
       layout,
       totalSeats,
-      availableSeats: totalSeats, // or keep existing availableSeats if you prefer
+      availableSeats: totalSeats,
     },
     { new: true }
   );
@@ -104,7 +102,6 @@ exports.getEventById = asyncHandler(async (req, res, next) => {
   // Generate QR ...
   const qr = await generateEventQRCode(event._id);
 
-  // derive booked seats from layout for convenience
   const bookedSeats =
     Array.isArray(event.layout)
       ? event.layout
@@ -118,7 +115,7 @@ exports.getEventById = asyncHandler(async (req, res, next) => {
       event,
       qrCode: qr.qrCode,
       joinUrl: qr.joinUrl,
-      bookedSeats, // <-- new helper field
+      bookedSeats,
     },
   });
 });
@@ -127,7 +124,7 @@ exports.getEventById = asyncHandler(async (req, res, next) => {
 
 exports.getMyCreatedEvents = asyncHandler(async (req, res) => {
   const events = await Event.find({ creatorId: req.user._id }).select(
-    'title description date availableSeats' // _id is included by default
+    'title description date availableSeats' 
   );
 
   res.status(200).json({
@@ -169,7 +166,6 @@ exports.verifyOwnership = asyncHandler(async (req, res, next) => {
   next();
 });
 
-// GET JOIN INFO (PUBLIC) – minimal data for /join/:eventId flow
 exports.getJoinInfo = asyncHandler(async (req, res, next) => {
   const event = await Event.findById(req.params.eventId);
 
@@ -181,7 +177,6 @@ exports.getJoinInfo = asyncHandler(async (req, res, next) => {
         .map((s) => s.seatNumber)
     : [];
 
-  // we don't need QR image here, only join URL if frontend wants it
   const joinUrl = `${process.env.CLIENT_URL}/join/${event._id}`;
 
   res.status(200).json({

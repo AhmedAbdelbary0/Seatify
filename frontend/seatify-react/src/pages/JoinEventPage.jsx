@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // <-- add useNavigate
-// import Navbar from "../components/Navbar";
-// import Footer from "../components/Footer";
+import { useParams, useNavigate } from "react-router-dom"; 
 import ChooseSeatModal from "../components/ChooseSeatModal";
 import ConfirmBookingModal from "../components/ConfirmBookingModal";
 import SignInModal from "../components/SignInModal";
@@ -10,7 +8,7 @@ import "../styles/style.css";
 
 function JoinEventPage() {
   const { eventId } = useParams();
-  const navigate = useNavigate(); // <-- for redirect
+  const navigate = useNavigate();
 
   const [event, setEvent] = useState(null);
   const [loadingEvent, setLoadingEvent] = useState(true);
@@ -18,7 +16,7 @@ function JoinEventPage() {
 
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [authUser, setAuthUser] = useState(null);
-  const [checkingAuth, setCheckingAuth] = useState(true); // <-- new
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showChooseSeatModal, setShowChooseSeatModal] = useState(false);
@@ -41,7 +39,7 @@ function JoinEventPage() {
         setIsSignedIn(false);
         setAuthUser(null);
       } finally {
-        setCheckingAuth(false); // <-- done checking
+        setCheckingAuth(false); 
       }
     };
     checkStatus();
@@ -157,8 +155,8 @@ function JoinEventPage() {
             await api.post(`/api/v1/events/${ev._id}/join`, {
               seats: seats || bookingDetails?.seats || [],
             });
-            alert("Booking successful!");              // <-- show success
-            navigate("/bookings");                    // <-- redirect
+            alert("Booking successful!");             
+            navigate("/bookings");            
           } catch (err) {
             console.error("Booking failed:", err);
           } finally {

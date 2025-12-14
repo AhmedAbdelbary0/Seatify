@@ -4,11 +4,9 @@ import "../styles/style.css";
 function ChooseSeatModal({ isOpen, onClose, onContinue, event }) {
   const [selectedSeats, setSelectedSeats] = useState([]);
 
-  // 🔹 derive values even if modal isn't open yet (safe, just cheap calculations)
   const maxSeatsPerPerson = event?.maxSeatsPerPerson || 1;
   const layout = Array.isArray(event?.layout) ? event.layout : [];
 
-  // 🔹 derive booked seats from event.layout (and fallback to event.bookedSeats if provided)
   const bookedSeatNumbers = useMemo(() => {
     if (!event) return [];
 
@@ -19,7 +17,6 @@ function ChooseSeatModal({ isOpen, onClose, onContinue, event }) {
           .map((s) => s.seatNumber)
       : [];
 
-    // Optional: merge with backend helper field from getEventById
     const fromEventField = Array.isArray(event.bookedSeats)
       ? event.bookedSeats
       : [];

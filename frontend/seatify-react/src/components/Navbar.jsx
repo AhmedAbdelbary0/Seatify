@@ -10,7 +10,7 @@ import api from "../api/axios";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState(null); // store logged-in user
+  const [user, setUser] = useState(null);
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
@@ -40,7 +40,6 @@ function Navbar() {
     // initial load
     checkAuthStatus();
 
-    // 🔹 listen to global auth changes (login/logout from anywhere)
     const handleAuthChanged = () => {
       checkAuthStatus();
     };
@@ -58,9 +57,7 @@ function Navbar() {
       localStorage.removeItem("accessToken");
       setIsSignedIn(false);
       setUser(null);
-      // 🔹 notify rest of app
       window.dispatchEvent(new Event("auth:changed"));
-      // 🔹 redirect to home page from any route
       if (window.location.pathname !== "/") {
         window.location.href = "/";
       }
@@ -74,7 +71,6 @@ function Navbar() {
     setShowResetPasswordModal(true);
   };
 
-  // helper: capitalize first letter of each word
   const formatName = (str) =>
     typeof str === "string"
       ? str
@@ -114,7 +110,6 @@ function Navbar() {
         <div className="nav-right">
           {isSignedIn && firstName !== undefined ? (
             <>
-              {/* greeting */}
               <span className="nav-greeting">
                 Hi{fullName ? `, ${fullName}` : ""}!
               </span>
@@ -164,13 +159,10 @@ function Navbar() {
         onSignIn={() => {
           setIsSignedIn(true);
           setShowSignInModal(false);
-          // 🔹 notify rest of app (e.g. HomePage) that auth changed
           window.dispatchEvent(new Event("auth:changed"));
         }}
         onSignInSuccess={(loggedInUser) => {
-          // store user from /login response
           if (loggedInUser && typeof loggedInUser === "object") setUser(loggedInUser);
-          // also ensure global listeners re-check status
           window.dispatchEvent(new Event("auth:changed"));
         }}
         onSwitchToSignUp={() => {

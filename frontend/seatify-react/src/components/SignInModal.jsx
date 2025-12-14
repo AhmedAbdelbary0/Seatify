@@ -20,21 +20,16 @@ function SignInModal({
     e.preventDefault();
     try {
       setError("");
-      // 🔹 FIX: include /api/v1 prefix
       const response = await api.post("/api/v1/auth/login", { email, password });
-      // cookies are set by backend; accessToken in body is optional now
 
       const user = response.data?.data?.user || null;
 
-      // 🔹 prefer onSignInSuccess if provided (HomePage uses this)
       if (typeof onSignInSuccess === "function") {
         await onSignInSuccess(user);
       } else if (typeof onSignIn === "function") {
-        // fallback for Navbar usage
         await onSignIn(user);
       }
 
-      // only close if parent didn't already close it
       if (typeof onClose === "function") onClose();
     } catch (err) {
       setError(

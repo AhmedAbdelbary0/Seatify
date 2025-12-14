@@ -12,7 +12,6 @@ function FindEventModal({ isOpen, onClose, onContinue, error }) {
         <h2>Find Event</h2>
         <p>Enter event ID to continue</p>
 
-        {/* optional error display from parent */}
         {error && <p className="error-text">{error}</p>}
 
         <form

@@ -32,7 +32,6 @@ function HeroSection({ title, highlight, subtitle, buttonText, tagText, onButton
           </div>
         )}
 
-        {/* Optional custom children */}
         {children}
       </div>
     </section>

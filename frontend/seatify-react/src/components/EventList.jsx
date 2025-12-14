@@ -20,7 +20,7 @@ function EventList({ events, setEvents }) {
 
       const res = await api.get(`/api/v1/events/${event._id}`);
       const fullEvent = res.data.data.event;
-      console.log("Full event in handleView:", fullEvent); // 🔍 check layout here
+      console.log("Full event in handleView:", fullEvent);
 
       setSelectedEvent(fullEvent);
     } catch (err) {
@@ -74,12 +74,11 @@ function EventList({ events, setEvents }) {
         )}
       </div>
 
-      {/* VIEW EVENT MODAL */}
       <EventViewModal
         isOpen={showViewModal}
         event={selectedEvent}
-        loading={viewLoading}        // 🔹 pass loading
-        error={viewError}            // 🔹 pass error (optional)
+        loading={viewLoading}        
+        error={viewError}            
         onClose={() => {
           setShowViewModal(false);
           setSelectedEvent(null);

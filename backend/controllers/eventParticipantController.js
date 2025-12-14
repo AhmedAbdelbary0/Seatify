@@ -91,7 +91,6 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
     await session.commitTransaction();
     session.endSession();
 
-    // 🔹 re-fetch participant populated for frontend convenience
     const populatedParticipant = await EventParticipant.findOne({
       eventId,
       userId: req.user._id,

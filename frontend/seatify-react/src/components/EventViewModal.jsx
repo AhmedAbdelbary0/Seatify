@@ -41,7 +41,7 @@ function EventViewModal({ isOpen, event, loading, error, onClose, onOpenAttendee
   });
 
   const layout = Array.isArray(event?.layout) ? event.layout : [];
-  console.log("Layout inside EventViewModal:", layout); // 🔍 must be non-empty
+  console.log("Layout inside EventViewModal:", layout); 
 
   let maxRow = -1;
   let maxColIndex = -1;

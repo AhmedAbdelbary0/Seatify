@@ -41,7 +41,6 @@ const sendTokens = (user, res, message) => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
-  // Remove sensitive fields
   user.password = undefined;
 
   res.status(200).json({
@@ -174,7 +173,7 @@ exports.refreshAccessToken = asyncHandler(async (req, res, next) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 60 * 60 * 1000, // 60 min
+    maxAge: 60 * 60 * 1000, 
   });
 
   res.status(200).json({
@@ -183,7 +182,6 @@ exports.refreshAccessToken = asyncHandler(async (req, res, next) => {
   });
 });
 
-// CHECK LOGIN STATUS
 exports.getStatus = asyncHandler(async (req, res, next) => {
   const token = req.cookies.accessToken;
   if (!token) {
@@ -211,7 +209,6 @@ exports.getStatus = asyncHandler(async (req, res, next) => {
     });
   }
 
-  // make status user shape match login user shape
   const firstName = user.firstName || '';
   const lastName = user.lastName || '';
 
@@ -219,11 +216,11 @@ exports.getStatus = asyncHandler(async (req, res, next) => {
     status: 'success',
     authenticated: true,
     user: {
-      id: user._id.toString(),  // same id the frontend expects
+      id: user._id.toString(),  
       firstName,
-      lastName,                 // <-- this is what was missing in your JSON
+      lastName,                 
       email: user.email,
-      fullName: [firstName, lastName].filter(Boolean).join(' '), // optional
+      fullName: [firstName, lastName].filter(Boolean).join(' '), 
     }
   });
 });

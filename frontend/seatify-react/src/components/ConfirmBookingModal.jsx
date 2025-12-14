@@ -52,7 +52,6 @@ function ConfirmBookingModal({
           .join(" ")
       : "";
 
-  // 🔹 helper: match EventViewModal date formatting (en-GB + same options)
   const formatEventDateTime = (ev) => {
     if (!ev || !ev.date) return "N/A";
 
@@ -104,7 +103,6 @@ function ConfirmBookingModal({
 
             <div className="detail-item">
               <label>Date &amp; Time</label>
-              {/* 🔹 date format now matches EventViewModal */}
               <p>{formattedDateTime}</p>
             </div>
 

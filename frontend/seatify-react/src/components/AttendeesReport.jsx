@@ -82,7 +82,6 @@ const AttendeesReport = ({ isOpen, onClose, eventName = 'Sample Event' }) => {
                     </table>
                 </div>
 
-                {/* seat layout to visually match EventViewModal */}
                 <div style={{ marginTop: 22 }}>
                     {renderSeatGrid()}
                     <div className="legend" style={{ justifyContent: 'center', marginTop: 12 }}>
