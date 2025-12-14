@@ -93,12 +93,7 @@ Seatify is a full-stack web application for event organizers and attendees to ma
 
 ## Testing
 
-- (Recommended) Use Jest and Supertest for backend API and DB operation tests
+- Use Jest and Supertest for backend API and DB operation tests
 - Example test cases: user registration, login, event creation, seat booking, etc.
 
-## License
 
-ISC License. See LICENSE file for details.
-
----
-For more details, see the documentation files and explore the codebase.
